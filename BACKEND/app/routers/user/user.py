@@ -11,7 +11,7 @@ from app.oauth import get_current_user
 router = APIRouter(prefix=f"/user", tags=["user"])
 
 @router.post("/create_user", response_model= Schema_user, status_code= status.HTTP_201_CREATED)
-def create_users(schema_user: Schema_user, db: Session = Depends(get_db), current_user: Schema_user=Depends(get_current_user)):
+def create_users(schema_user: Schema_user, db: Session = Depends(get_db)):
     # Convertir el esquema en un diccionario
     response = create_user(schema_user, db)
     return response
@@ -21,7 +21,7 @@ def read_users_id(user_id:int, db: Session = Depends(get_db), current_user: Sche
     response = read_users(user_id, db)
     return response 
 
-@router.patch("/update_user", response_model= Schema_user, status_code= status.HTTP_200_OK)
+@router.patch("/update_user", status_code= status.HTTP_200_OK)
 def update_users(user_id:int, schema_user: Schema_user, db: Session = Depends(get_db), current_user: Schema_user=Depends(get_current_user)):
     response = update_user(user_id, schema_user, db)
     return response

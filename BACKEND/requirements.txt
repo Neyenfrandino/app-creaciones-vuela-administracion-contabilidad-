@@ -7,3 +7,4 @@ SQLALchemy
 Alembic
 passlib[bcrypt]
 python-jose[cryptography]
+python-multipart

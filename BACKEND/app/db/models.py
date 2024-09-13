@@ -1,56 +1,90 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, Date, ForeignKey, Float, Boolean, DECIMAL
 from sqlalchemy.orm import relationship
 from app.db.database import Base
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "user"
 
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    username = Column(String, index=True, nullable=False) 
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True, nullable=False) 
     email = Column(String, unique=True, index=True, nullable=False) 
-    password = Column(String, nullable=False)
-    date_creation = Column(Date, nullable=False) 
-    name = Column(String, nullable=True) 
-    last_name = Column(String, nullable=True) 
+    password = Column(String, nullable=True)
 
-    # Relación con Pills_all_and_users (Many-to-Many a través de la tabla intermedia)
-    pills_all_and_users = relationship("Pills_all_and_users", back_populates="users") 
+    # Relación con Product y SellProduct con cascada
+    products = relationship("Product", back_populates="user", cascade="all, delete-orphan")
+    sell_products = relationship("SellProduct", back_populates="user", cascade="all, delete-orphan")
 
 
-class Pills_all(Base):
-    __tablename__ = "pills-all"
+class Product(Base):
+    __tablename__ = "products"
 
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    name_pills = Column(String, nullable=False) 
-    description_pills = Column(String, nullable=True)
-    mode_use_pills = Column(String, nullable=True)
-    cant_pills_in_tablet = Column(Integer, nullable=False)
+    products_id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
+    category_of_products_id = Column(Integer, ForeignKey("category_of_products.category_products_id", ondelete="CASCADE"), nullable=False)
+    name_product = Column(String(255), nullable=False)
+    description_product = Column(String(255))
+    price_production = Column(Float)
+    price_sell_client_final = Column(Float)
+    current_stock = Column(Integer)
+    image_url = Column(String(255))
 
-    # Relación con Pills_all_and_users (Many-to-Many a través de la tabla intermedia)
-    pills_all_and_users = relationship("Pills_all_and_users", back_populates="pills_all") 
-
-
-class Info_user_about_activity(Base):
-    __tablename__ = "info-user-about-activity"
-
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    current_pills_date = Column(Date, nullable=False)
-    last_pills_date = Column(Date, nullable=True)
-    init_tratament_date = Column(Date, nullable=False)
-
-    # Relación con Pills_all_and_users (One-to-One)
-    pills_all_and_users = relationship("Pills_all_and_users", back_populates="info_user_about_activity", uselist=False) 
+    # Relaciones inversas con cascada para cost_productions
+    user = relationship("User", back_populates="products")
+    category = relationship("CategoryOfProduct", back_populates="products")
+    sell_products = relationship("SellProduct", back_populates="product", cascade="all, delete-orphan")
+    cost_productions = relationship("CostProduction", back_populates="product", cascade="all, delete-orphan")
 
 
-# Tabla intermedia para la relación Many-to-Many entre User y Pills_all
-class Pills_all_and_users(Base):
-    __tablename__ = "pills-all_and_users"
+class SellProduct(Base):
+    __tablename__ = "sell_products"
 
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    pills_all_id = Column(Integer, ForeignKey("pills-all.id"), nullable=False)
-    users_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    info_user_about_activity_id = Column(Integer, ForeignKey("info-user-about-activity.id"), nullable=False)
+    sell_product_id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
+    products_id = Column(Integer, ForeignKey("products.products_id", ondelete="CASCADE"), nullable=False)
+    date_sell = Column(Date, nullable=False)
+    quantity_sell = Column(Integer, nullable=False)
+    price_unit = Column(Float, nullable=False)
+    paid = Column(Boolean, nullable=False)
+    payment_method = Column(String(255), nullable=False)
 
-    pills_all = relationship("Pills_all", back_populates="pills_all_and_users")
-    users = relationship("User", back_populates="pills_all_and_users")
-    info_user_about_activity = relationship("Info_user_about_activity", back_populates="pills_all_and_users")
+    # Relaciones inversas
+    user = relationship("User", back_populates="sell_products")
+    product = relationship("Product", back_populates="sell_products")
+
+
+class CategoryOfProduct(Base):
+    __tablename__ = "category_of_products"
+
+    category_products_id = Column(Integer, primary_key=True)
+    name_category = Column(String(255), nullable=False)
+    description = Column(String(255))
+
+    # Relación con Product
+    products = relationship("Product", back_populates="category")
+
+
+class CostProduction(Base):
+    __tablename__ = "cost_production"
+
+    cost_production_id = Column(Integer, primary_key=True)
+    products_id = Column(Integer, ForeignKey("products.products_id"), nullable=False)
+    stock_materia_prima_id = Column(Integer, ForeignKey("stock_materia_prima.stock_materia_prima_id"), nullable=False)
+    cant_materia_prima = Column(DECIMAL(10, 2), nullable=False)
+
+    # Relaciones inversas
+    product = relationship("Product", back_populates="cost_productions")
+    stock_materia_prima = relationship("StockMateriaPrima", back_populates="cost_productions")
+
+
+class StockMateriaPrima(Base):
+    __tablename__ = "stock_materia_prima"
+
+    stock_materia_prima_id = Column(Integer, primary_key=True)
+    name = Column(String(255), nullable=False)
+    description = Column(String(255), nullable=False)
+    quantity = Column(DECIMAL(10, 2), nullable=False)
+    current_date = Column(Date, nullable=False)
+    precio_compra = Column(Float, nullable=False)
+
+    # Relación con CostProduction
+    cost_productions = relationship("CostProduction", back_populates="stock_materia_prima")

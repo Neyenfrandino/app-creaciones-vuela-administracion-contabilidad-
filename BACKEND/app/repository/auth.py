@@ -15,7 +15,7 @@ def login_user(schema: OAuth2PasswordRequestForm, db: Session):
 
         # Verificar la contraseña
         if Hash.verify_password(schema.password, user_true.password): 
-            access_token = create_access_token({"username": user_true.username, "email": user_true.email})
+            access_token = create_access_token({"username": user_true.email})
             return {"access_token": access_token, "token_type": "bearer"}
         else:
             raise HTTPException(status_code=401, detail="Contraseña incorrecta")
