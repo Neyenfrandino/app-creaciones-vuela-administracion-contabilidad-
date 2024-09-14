@@ -36,6 +36,47 @@ class ProductSchema(BaseModel):
         orm_mode = True
 
 
+class SellProductSchema(BaseModel):
+    user_id: int
+    products_id: int
+    date_sell: date
+    quantity_sell: int
+    price_unit: float
+    paid: bool
+    payment_method: str
+
+    class Config:
+        orm_mode = True
+
+
+
+class CategoryOfProductSchema(BaseModel):
+    name_category: str
+    description: Optional[str] = None
+
+    class Config:
+        orm_mode = True
+
+
+class CostProductionSchema(BaseModel):
+    products_id: int
+    stock_materia_prima_id: int
+    cant_materia_prima: float
+    
+    class Config:
+        orm_mode = True
+
+class StockMateriaPrimaSchema(BaseModel):
+    name: str
+    description: Optional[str] = None
+    quantity: float
+    current_date: date
+    precio_compra: float
+
+    class Config:
+        orm_mode = True 
+        
+
 class Token(BaseModel):
     access_token: str
     token_type: str
