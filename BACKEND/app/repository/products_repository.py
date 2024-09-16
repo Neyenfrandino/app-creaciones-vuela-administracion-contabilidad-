@@ -1,6 +1,7 @@
 # from sqlalchemy.orm import Session
+from sqlalchemy import func
 from fastapi import HTTPException
-from app.db.models import Product, User, CategoryOfProduct
+from app.db.models import Product, User, CategoryOfProduct, CostProduction, ProductMaterial, StockMateriaPrima
 
 
 def create_product(user_id, schema, db):
@@ -16,7 +17,7 @@ def create_product(user_id, schema, db):
 
         if category_true is None:
             raise HTTPException(status_code=404, detail="Category not found")
-
+        
         # Convertir el esquema a un diccionario
         product_dict = schema.dict()
         

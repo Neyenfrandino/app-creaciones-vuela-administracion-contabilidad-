@@ -1,25 +1,28 @@
 from fastapi import HTTPException
-from app.db.models import User, CostProduction, StockMateriaPrima
+from app.db.models import User, CostProduction, StockMateriaPrima, ProductMaterial
 
 def cost_production_create(user_id, schema, db):
     try:
+        # Verificar si el usuario existe
         user_true = db.query(User).filter(User.id == user_id).first()
 
         if user_true is None:
             raise HTTPException(status_code=404, detail="User not found")
         
-        stock_materia_prima_true = db.query(StockMateriaPrima).filter(StockMateriaPrima.stock_materia_prima_id == schema.stock_materia_prima_id).first()
+        # Verificar si el ProductMaterial existe
+        product_material_true = db.query(ProductMaterial).filter(ProductMaterial.id == schema.product_material_id).first()
 
-        if stock_materia_prima_true is None:
-            raise HTTPException(status_code=404, detail="StockMateriaPrima not found")
+        if product_material_true is None:
+            raise HTTPException(status_code=404, detail="ProductMaterial not found")
         
-
+        # Crear la instancia de CostProduction
         cost_production = CostProduction(**schema.dict())
         db.add(cost_production)
         db.commit()
     
         return {"message": "CostProduction created successfully"}
     except Exception as e:
+        db.rollback()  # Deshacer los cambios en caso de error
         raise HTTPException(status_code=409, detail=str(e))
     
 

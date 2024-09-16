@@ -4,7 +4,6 @@ from app.hashing import Hash
 
 from app.db.models import User
 
-
 def create_user(schema, db):
     try:
         schema.password = Hash.hash_password(schema.password)

@@ -28,11 +28,12 @@ class Product(Base):
     current_stock = Column(Integer)
     image_url = Column(String(255))
 
-    # Relaciones inversas con cascada para cost_productions
+    # Relaciones inversas
     user = relationship("User", back_populates="products")
     category = relationship("CategoryOfProduct", back_populates="products")
     sell_products = relationship("SellProduct", back_populates="product", cascade="all, delete-orphan")
     cost_productions = relationship("CostProduction", back_populates="product", cascade="all, delete-orphan")
+    product_materials = relationship("ProductMaterial", back_populates="product", cascade="all, delete-orphan")
 
 
 class SellProduct(Base):
@@ -67,13 +68,13 @@ class CostProduction(Base):
     __tablename__ = "cost_production"
 
     cost_production_id = Column(Integer, primary_key=True)
-    products_id = Column(Integer, ForeignKey("products.products_id"), nullable=False)
-    stock_materia_prima_id = Column(Integer, ForeignKey("stock_materia_prima.stock_materia_prima_id"), nullable=False)
+    products_id = Column(Integer, ForeignKey("products.products_id", ondelete="CASCADE"), nullable=False)
+    product_material_id = Column(Integer, ForeignKey("product_material.id"), nullable=False)  
     cant_materia_prima = Column(DECIMAL(10, 2), nullable=False)
 
     # Relaciones inversas
     product = relationship("Product", back_populates="cost_productions")
-    stock_materia_prima = relationship("StockMateriaPrima", back_populates="cost_productions")
+    product_material = relationship("ProductMaterial", back_populates="cost_productions")
 
 
 class StockMateriaPrima(Base):
@@ -86,5 +87,19 @@ class StockMateriaPrima(Base):
     current_date = Column(Date, nullable=False)
     precio_compra = Column(Float, nullable=False)
 
-    # Relación con CostProduction
-    cost_productions = relationship("CostProduction", back_populates="stock_materia_prima")
+    # Relación con la tabla intermedia ProductMaterial
+    product_materials = relationship("ProductMaterial", back_populates="stock_materia_prima")
+
+
+class ProductMaterial(Base):
+    __tablename__ = "product_material"
+
+    id = Column(Integer, primary_key=True)
+    products_id = Column(Integer, ForeignKey("products.products_id"), nullable=False)
+    stock_materia_prima_id = Column(Integer, ForeignKey("stock_materia_prima.stock_materia_prima_id"), nullable=False)
+
+    # Relaciones inversas
+    product = relationship("Product", back_populates="product_materials")
+    stock_materia_prima = relationship("StockMateriaPrima", back_populates="product_materials")
+    cost_productions = relationship("CostProduction", back_populates="product_material")
+ 
