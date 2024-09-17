@@ -59,14 +59,13 @@ class CategoryOfProductSchema(BaseModel):
 
 
 class CostProductionSchema(BaseModel):
-    # cost_production_id: int
+    cost_production_id: int
     products_id: int
-    product_material_id: int  # Asegúrate de que este atributo esté presente
-    cant_materia_prima: float
-
+    total_cost: float  # Añadir el campo `total_cost` si es relevante para el cálculo y la actualización
+    
     class Config:
         orm_mode = True
-
+        
 class StockMateriaPrimaSchema(BaseModel):
     name: str
     description: Optional[str] = None
@@ -79,8 +78,8 @@ class StockMateriaPrimaSchema(BaseModel):
 
 class ProductMaterialSchema(BaseModel):
     products_id: int
-    stock_materia_prima_id: int
-
+    stock_materia_prima_id: int  # Asegúrate de que este atributo esté presente
+    quantity_used: float
     class Config:
         orm_mode = True
 

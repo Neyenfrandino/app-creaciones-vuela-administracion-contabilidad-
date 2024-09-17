@@ -18,7 +18,6 @@ app = FastAPI()
 # create_tables()
 
 app.include_router(auth.router)
-
 app.include_router(user.router)
 app.include_router(products.router)
 app.include_router(sell_products.router)

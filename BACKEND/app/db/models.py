@@ -67,14 +67,12 @@ class CategoryOfProduct(Base):
 class CostProduction(Base):
     __tablename__ = "cost_production"
 
-    cost_production_id = Column(Integer, primary_key=True)
-    products_id = Column(Integer, ForeignKey("products.products_id", ondelete="CASCADE"), nullable=False)
-    product_material_id = Column(Integer, ForeignKey("product_material.id"), nullable=False)  
-    cant_materia_prima = Column(DECIMAL(10, 2), nullable=False)
+    cost_production_id = Column(Integer, primary_key=True, index=True)
+    products_id = Column(Integer, ForeignKey("products.products_id", ondelete="CASCADE"), nullable=False)  # Relación con Product
+    total_cost = Column(Float, nullable=False)  # Almacena el costo total de producción del producto
 
-    # Relaciones inversas
+    # Relación inversa con Product
     product = relationship("Product", back_populates="cost_productions")
-    product_material = relationship("ProductMaterial", back_populates="cost_productions")
 
 
 class StockMateriaPrima(Base):
@@ -94,12 +92,11 @@ class StockMateriaPrima(Base):
 class ProductMaterial(Base):
     __tablename__ = "product_material"
 
-    id = Column(Integer, primary_key=True)
-    products_id = Column(Integer, ForeignKey("products.products_id"), nullable=False)
-    stock_materia_prima_id = Column(Integer, ForeignKey("stock_materia_prima.stock_materia_prima_id"), nullable=False)
+    id = Column(Integer, primary_key=True, index=True)
+    products_id = Column(Integer, ForeignKey("products.products_id", ondelete="CASCADE"), nullable=False)  # Relación con Product
+    stock_materia_prima_id = Column(Integer, ForeignKey("stock_materia_prima.stock_materia_prima_id", ondelete="CASCADE"), nullable=False)  # Relación con StockMateriaPrima
+    quantity_used = Column(DECIMAL(10, 2), nullable=False)  # Cantidad del material utilizado en el producto
 
     # Relaciones inversas
     product = relationship("Product", back_populates="product_materials")
     stock_materia_prima = relationship("StockMateriaPrima", back_populates="product_materials")
-    cost_productions = relationship("CostProduction", back_populates="product_material")
- 
