@@ -10,8 +10,8 @@ def create_sell_product(user_id, schema, db):
         
         product_true = db.query(Product).filter(Product.products_id == schema.products_id).first()
 
-        if product_true is None:
-            raise HTTPException(status_code=404, detail="Product not found")
+        if product_true is None and schema.quantity_sell < product_true.current_stock:
+            raise HTTPException(status_code=404, detail="Product not found o insuficiente stock")
 
         # Convertir el esquema a un diccionario
         sell_product_dict = schema.dict()
@@ -76,6 +76,7 @@ def update_sell_product(user_id, sell_product_id, schema, db):
     except Exception as e:
         raise HTTPException(status_code=409, detail=str(e))
     
+
 def delete_sell_product(user_id, sell_product_id, db):
     try:
         user_true = db.query(User).filter(User.id == user_id).first()

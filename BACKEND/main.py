@@ -8,6 +8,11 @@ from app.routers.category_of_products import category_of_products
 from app.routers.cost_production import cost_production
 from app.routers.stock_materia_prima import stock_materia_prima
 from app.routers.products_material import products_material
+
+# Analytics routers 
+from app.routers.analytics.sell_analysis import sell_total_analytics
+
+
 # from app.db.database import Base, engine 
 
 app = FastAPI()
@@ -25,6 +30,9 @@ app.include_router(category_of_products.router)
 app.include_router(cost_production.router)
 app.include_router(stock_materia_prima.router)
 app.include_router(products_material.router)
+
+# Analytics routers 
+app.include_router(sell_total_analytics.router)
 
 
 if __name__ == "__main__":

@@ -19,8 +19,32 @@ def create_product_material(user_id, schema, db):
         
         # Crear y agregar el nuevo ProductMaterial
         product_material = ProductMaterial(**schema.dict())
-        db.add(product_material)
-        db.commit()  # Commit aquí para que product_material tenga un ID asignado
+
+        # Buscar el stock de materia prima en la base de datos
+        product_material_data_db = db.query(StockMateriaPrima).filter(
+            StockMateriaPrima.stock_materia_prima_id == product_material.stock_materia_prima_id
+        ).first()
+
+        if product_material_data_db is None:
+            raise HTTPException(status_code=404, detail="Stock de materia prima no encontrado")
+
+        # Convertir las cantidades a decimales
+        product_material_data_db_decimal = Decimal(product_material_data_db.quantity)
+        product_material_quantity_used_decimal = Decimal(product_material.quantity_used)
+
+        # Verificamos si hay suficiente cantidad en el stock
+        if product_material_quantity_used_decimal <= product_material_data_db_decimal:
+            # Restamos la cantidad utilizada del stock disponible
+            product_material_data_db.quantity = float(product_material_data_db_decimal - product_material_quantity_used_decimal)
+            
+            # Agregamos el nuevo registro de uso de materia prima
+            db.add(product_material)
+            # Confirmamos los cambios en la base de datos
+            db.commit()
+        else:
+            # Si no hay suficiente cantidad, lanzamos una excepción
+            raise HTTPException(status_code=400, detail="Cantidad de producto insuficiente")
+
 
         # Consultar el costo de producción basado en la relación, 
         # usando el ID del producto recién creado
@@ -43,6 +67,7 @@ def create_product_material(user_id, schema, db):
                 # Calcular el costo individual y sumarlo al costo total
                 cost = quantity_used * precio_compra
                 product_final += cost
+
             except Exception as e:
                 raise HTTPException(status_code=400, detail=f"Error calculating cost: {str(e)}")
 
@@ -89,12 +114,14 @@ def read_product_material(user_id, product_material_id, db):
     except Exception as e:
         raise HTTPException(status_code=409, detail=str(e))
 
+
 def update_product_material(user_id, product_material_id, schema, db):
     try:
         # Obtener el usuario y el material del producto
         user_true = db.query(User).filter(User.id == user_id).first()
         product_material_true = db.query(ProductMaterial).filter(ProductMaterial.id == product_material_id).first()
         cost_production_true = db.query(CostProduction).filter(CostProduction.products_id == product_material_true.products_id).first()
+        stock_materia_prima_true = db.query(StockMateriaPrima).filter(StockMateriaPrima.stock_materia_prima_id == product_material_true.stock_materia_prima_id).first()
 
 
         # Validar que el usuario y el material del producto existan
@@ -121,11 +148,15 @@ def update_product_material(user_id, product_material_id, schema, db):
             diferencia = quantity_used_decimal - product_material_quantity_used_decimal
             product_material_data['quantity_used'] = product_material_quantity_used_decimal + diferencia
 
+            stock_materia_prima_true.quantity = stock_materia_prima_true.quantity - diferencia
+
+
         elif quantity_used_decimal < product_material_quantity_used_decimal:
 
             diferencia = product_material_quantity_used_decimal - quantity_used_decimal
             product_material_data['quantity_used'] = product_material_quantity_used_decimal - diferencia
-
+            
+            stock_materia_prima_true.quantity = stock_materia_prima_true.quantity + diferencia
         
         for key, value in product_material_data.items():
             # Convertir 'name' a minúsculas si es parte de los datos
@@ -174,6 +205,7 @@ def update_product_material(user_id, product_material_id, schema, db):
         # Registrar la excepción y lanzar una HTTPException genérica
         raise HTTPException(status_code=500, detail="Ocurrió un error inesperado: " + str(e))
 
+
 def delete_product_material(user_id, product_material_id, db):
     try:
         # Verificar si el usuario existe
@@ -198,8 +230,11 @@ def delete_product_material(user_id, product_material_id, db):
             try:
                 quantity_used = Decimal(product_material_row.quantity_used)
                 precio_compra = Decimal(stock_materia_prima.precio_compra)
+
                 resultado = quantity_used * precio_compra
                 diferencia[product_material_row.products_id] = resultado
+
+                stock_materia_prima.quantity = Decimal(stock_materia_prima.quantity) + quantity_used
             except Exception as e:
                 raise HTTPException(status_code=409, detail=f"Error calculating cost: {str(e)}")
 
