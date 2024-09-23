@@ -1,9 +1,10 @@
-from fastapi import Depends, HTTPException
-from sqlalchemy import func
+
+from sqlalchemy import extract, func
+from fastapi import HTTPException
 
 from app.db.models import User, Product, SellProduct
 
-def get_sell_analytics(user_id, db):
+def get_sell_total_X_products(user_id, db):
     user_true = db.query(User).filter(User.id == user_id).first()
 
     if user_true is None:
@@ -36,7 +37,7 @@ def get_sell_analytics(user_id, db):
     return sell_analytics
 
 
-def total_revenue(user_id, db):
+def get_total_sell_revenue(user_id, db):
     user_true = db.query(User).filter(User.id == user_id).first()
 
     if user_true is None:
@@ -50,6 +51,61 @@ def total_revenue(user_id, db):
     for sell_product in filter_user_db_sell:
         total_revenue += sell_product.price_unit * sell_product.quantity_sell
     
-    print(total_revenue)
+    return {"total_revenue": total_revenue}
     
 
+def trend_analysis(user_id, db):
+    # Verificar si el usuario existe
+    user_true = db.query(User).filter(User.id == user_id).first()
+    if user_true is None:
+        raise HTTPException(status_code=404, detail="No existe el usuario")
+    
+    # Agrupar por mes y año, contando el número de ventas
+    trend_data = (
+        db.query(
+            extract('month', SellProduct.date_sell).label('month'),
+            extract('year', SellProduct.date_sell).label('year'),
+            func.count(SellProduct.sell_product_id).label('total_sales')
+        )
+        .filter(SellProduct.user_id == user_id)
+        .group_by('year', 'month')
+        .order_by('year', 'month')
+        .all()
+    )
+
+    # Formatear el resultado
+    sell_analytics_ = [
+        {"month": month, "year": year, "total_sales": total_sales}
+        for month, year, total_sales in trend_data
+    ]
+    
+
+    return sell_analytics_
+
+
+def get_treds_analytics_month(user_id, db):
+    # Verificar si el usuario existe
+    user_true = db.query(User).filter(User.id == user_id).first()
+    if user_true is None:
+        raise HTTPException(status_code=404, detail="No existe el usuario")
+    
+    # Agrupar por mes, contando el número de ventas y ordenando por total de ventas (descendente)
+    trend_data = (
+        db.query(
+            extract('month', SellProduct.date_sell).label('month'),
+            func.count(SellProduct.sell_product_id).label('total_sales')
+        )
+        .filter(SellProduct.user_id == user_id)
+        .group_by('month')
+        .order_by(func.count(SellProduct.sell_product_id).desc())  # Ordenar por ventas descendente
+        .limit(5)  # Limitar a los 5 meses con más ventas
+        .all()
+    )
+
+    # Formatear el resultado
+    sell_analytics_ = [
+        {"month": month, "total_sales": total_sales}
+        for month, total_sales in trend_data
+    ]
+    
+    return sell_analytics_

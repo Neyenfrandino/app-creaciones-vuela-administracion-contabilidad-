@@ -8,6 +8,7 @@ from app.routers.category_of_products import category_of_products
 from app.routers.cost_production import cost_production
 from app.routers.stock_materia_prima import stock_materia_prima
 from app.routers.products_material import products_material
+from fastapi.middleware.cors import CORSMiddleware
 
 # Analytics routers 
 from app.routers.analytics.sell_analysis import sell_total_analytics
@@ -16,6 +17,16 @@ from app.routers.analytics.sell_analysis import sell_total_analytics
 # from app.db.database import Base, engine 
 
 app = FastAPI()
+
+
+# Configurar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],  # Agrega PATCH a la lista de métodos permitidos,
+    allow_headers=["*"],
+)
 
 # def create_tables():
 #     Base.metadata.create_all(bind=engine)

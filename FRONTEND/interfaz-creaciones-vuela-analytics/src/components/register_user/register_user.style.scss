@@ -1,0 +1,109 @@
+.register_user__container {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: auto;
+    background-color: transparent;
+    animation: slideIn 0.5s ease-in-out;
+    overflow: auto;
+    margin-bottom: 3%;
+
+    .register_user__haders{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1%;
+
+        h1 {
+            font-size: 50px;
+            color: #eeede8;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+          }
+        
+        span {
+            font-size: 15px;
+            color: #eeede8;
+            text-align: center;
+          }
+    }
+
+    .register_user__form{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 400px;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 10px;
+        padding: 50px;
+        border: 2px solid #eeede855;
+
+        .register_user__button{
+            width: 50%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #C96E5088;
+            color: black;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            
+            &:hover {
+                background-color: #C96E50;
+                color: white;
+                transform: scale(.95);
+                box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
+              }
+        }
+    }
+
+    .register_user__login {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2%;
+        width: 400px;
+
+        p {
+            font-size: 15px;
+            color: #eeede8;
+            text-align: center;
+          }
+
+        a {
+            font-size: 15px;
+            color: #C96E50;
+            text-decoration: none;
+        }
+    }
+}
+
+.error{
+    color: red;
+    border-bottom: 1px solid red;
+    border-left: 1px solid red;
+    border-right: 1px solid red;
+    background-color: #ff000088;
+
+
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+
+    }
+    100% {
+        opacity: 1;
+    }
+}

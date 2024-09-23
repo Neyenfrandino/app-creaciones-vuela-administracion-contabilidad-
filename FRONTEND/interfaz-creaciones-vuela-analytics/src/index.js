@@ -1,5 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { ContextLoginProvider } from './context/context_login/context.login';
+import { ContextQueryProvider } from './context/contexts_query/contexts_query';
+
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -7,7 +11,13 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <ContextLoginProvider>
+        <ContextQueryProvider>
+          <App />
+        </ContextQueryProvider>
+      </ContextLoginProvider>
+    </Router>
   </React.StrictMode>
 );
 
