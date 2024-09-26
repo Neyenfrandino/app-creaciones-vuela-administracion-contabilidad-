@@ -3,7 +3,7 @@ from sqlalchemy import extract, func
 from fastapi import HTTPException
 
 from app.db.models import User, Product, SellProduct
-
+# detalles de ventas por producto de un usuario, esto nos devuelve la cantidad de ventas, el total de ventas y el total de ventas por unidad
 def get_sell_total_X_products(user_id, db):
     user_true = db.query(User).filter(User.id == user_id).first()
 
@@ -45,13 +45,18 @@ def get_total_sell_revenue(user_id, db):
     
     filter_user_db_sell = db.query(SellProduct).filter(SellProduct.user_id == user_id).all()
                         
-    
+    print(len(filter_user_db_sell))
     total_revenue = 0
 
     for sell_product in filter_user_db_sell:
         total_revenue += sell_product.price_unit * sell_product.quantity_sell
+
+        data_product ={
+            "total_revenue": total_revenue,
+            'cant_sell_total': len(filter_user_db_sell)
+        }
     
-    return {"total_revenue": total_revenue}
+    return data_product
     
 
 def trend_analysis(user_id, db):

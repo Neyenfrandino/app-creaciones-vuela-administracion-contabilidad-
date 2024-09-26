@@ -18,6 +18,7 @@ def create_sell_product(user_id, schema, db):
         
         # Asignar el ID del usuario al producto
         sell_product_dict['user_id'] = user_true.id
+        sell_product_dict['price_unit'] = product_true.price_sell_client_final
 
         # Crear la instancia del modelo Product
         sell_product_true = SellProduct(**sell_product_dict)

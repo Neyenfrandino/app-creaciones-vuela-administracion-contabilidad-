@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from app.db.models import ProductMaterial, User, StockMateriaPrima, CostProduction
+from app.db.models import ProductMaterial, User, StockMateriaPrima, CostProduction, Product
 
 from sqlalchemy.orm import aliased
 from fastapi import HTTPException
@@ -44,8 +44,7 @@ def create_product_material(user_id, schema, db):
         else:
             # Si no hay suficiente cantidad, lanzamos una excepción
             raise HTTPException(status_code=400, detail="Cantidad de producto insuficiente")
-
-
+        
         # Consultar el costo de producción basado en la relación, 
         # usando el ID del producto recién creado
         cost_production = (
@@ -84,11 +83,22 @@ def create_product_material(user_id, schema, db):
                 total_cost=product_final
             )
             db.add(cost_production_true)
+
         else:
             # Si ya existe, actualizar el total_cost
             cost_production_true.total_cost = product_final
 
         # Guardar cambios en la base de datos
+
+        # Verificar si el producto existe
+        product_true = db.query(Product).filter(Product.products_id == product_material.products_id).first()
+
+        if product_true is None:
+            raise HTTPException(status_code=404, detail="Product not found")
+        
+        # Actualizar el stock del producto
+        product_true.price_production = product_final
+
         db.commit()
 
         return {"message": "ProductMaterial created successfully and CostProduction updated"}

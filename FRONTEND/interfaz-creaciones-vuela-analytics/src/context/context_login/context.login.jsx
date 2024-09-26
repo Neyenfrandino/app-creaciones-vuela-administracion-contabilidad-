@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import login from '../../utlis/login/login';
 
@@ -9,9 +10,10 @@ export const ContextLogin = createContext({
 });
 
 export const ContextLoginProvider = ({ children }) => {
+    const navigate = useNavigate();
 
     const [user_form, set_user_form] = useState('');
-    const [user_true, setUserTrue] = useState('');
+    const [user_true, setUserTrue] = useState(()=>sessionStorage.getItem('accessTrue'));
 
     useEffect(() => {
         if (user_form['login-user']) {
@@ -23,9 +25,13 @@ export const ContextLoginProvider = ({ children }) => {
                 let response = login(formData);
                 response.then((data) => {
                     if (data['access_token'] && data['token_type']) {
-                        // localStorage.setItem('access_token', data['access_token']);
-                        // localStorage.setItem('token_type', data['token_type']);
+                        const accessTrue = {
+                            access_token: data['access_token'],
+                            token_type: data['token_type'],
+                        }
+                        sessionStorage.setItem('accessTrue', JSON.stringify(accessTrue));
                         setUserTrue(data);
+                        navigate('/');
                         return
                     }else if (!data.ok){
                         console.log(data);
@@ -37,9 +43,11 @@ export const ContextLoginProvider = ({ children }) => {
         } 
 
     }, [user_form]);
+
+    console.log(user_true, 'user_form');
+    
     const values = { user_form, set_user_form, user_true, setUserTrue };
 
-    console.log(user_true, 'aaaaaaaa');
     return (
         <ContextLogin.Provider value={values}>
             {children}

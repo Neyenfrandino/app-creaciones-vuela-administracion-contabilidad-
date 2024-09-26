@@ -12,6 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # Analytics routers 
 from app.routers.analytics.sell_analysis import sell_total_analytics
+from app.routers.analytics.cost_analysis import cost_analytics
 
 
 # from app.db.database import Base, engine 
@@ -44,6 +45,8 @@ app.include_router(products_material.router)
 
 # Analytics routers 
 app.include_router(sell_total_analytics.router)
+app.include_router(cost_analytics.router)
+
 
 
 if __name__ == "__main__":
