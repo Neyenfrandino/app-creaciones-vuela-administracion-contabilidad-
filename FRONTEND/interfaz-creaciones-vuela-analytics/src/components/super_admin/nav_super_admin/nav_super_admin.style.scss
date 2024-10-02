@@ -1,0 +1,97 @@
+.nav_super_admin__container {
+    width: 100%;
+    height: auto;
+    position: relative;
+    margin-top: 10%;
+    display: flex;
+
+    .nav_super_admin__content__nav__ul {
+        display: flex;
+        flex-direction: column;
+        list-style: none;            
+        height: auto;
+        gap: 20px;
+        position: relative;
+        padding-inline-start: 20px;
+        // border: 1px solid red;
+
+        
+        .nav_super_admin__content__nav__ul__li {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: relative;
+            width: 100%;
+            height: auto;
+
+            // &:hover{
+            //     background-color: rgba(0, 0, 0, 0.1);
+            //     border-radius: 25px;
+            //     cursor: pointer;
+            //     transition: all 0.3s ease;
+            //     width: 110%;
+            //     height: auto;
+            //     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  
+            // }
+            &::after {
+                content: "";
+                position: absolute;
+                top: 45%;
+                left: 100%; // Ubicado al costado derecho
+                width: 10px; // Ajusta el tamaño del punto
+                height: 10px; // Ajusta el tamaño del punto
+                border-radius: 50%; // Hacerlo redondo
+                background-color: rgba(255, 76, 76); // Color del puntito
+                transform: translateY(-50%) scale(0); // Inicialmente oculto
+                transition: transform 0.3s ease; // Transición para el 
+                border: 1px solid rgba(255, 152, 152, 0.5); // Borde redondo
+            }
+        
+            // Efecto hover
+            &:hover {
+                cursor: pointer;
+                // box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); // Efecto de sombra
+        
+                // Mostrar el puntito al hacer hover
+                &::after {
+                    transform: translateY(-5%) scale(1); // Hacer visible el puntito
+                }
+            }
+        
+
+            .link {
+                text-decoration: none;
+                color: black;
+            }
+
+            span {
+                font-size: 12px;
+                margin-left: 10px;
+            }
+
+        }
+    }
+}
+    
+.active_menu_admin {
+    display: flex;
+    align-items: flex-start; /* Alinea el contenido verticalmente al inicio */
+    justify-content: flex-start; /* Alinea el contenido horizontalmente al inicio */
+    width: 100%;
+    margin-left: -15px;
+    padding: 8px;
+    padding-right: 25px;
+    padding-left: 15px;
+    border-radius: 25px; /* Bordes redondeados suaves */
+    background-color: #f8f9fa; /* Un color de fondo sutil */
+    color: #333; /* Color de texto más oscuro para mejor contraste */
+    text-decoration: none; /* Elimina el subrayado de enlaces */
+    font-size: 16px; /* Tamaño de fuente legible */
+    font-weight: 500; /* Un peso de fuente moderado */
+    transition: all 0.3s ease; /* Transición suave en todos los cambios */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil para dar profundidad */
+    cursor: pointer; /* Cambia el cursor a puntero para interactividad */
+}
+
+

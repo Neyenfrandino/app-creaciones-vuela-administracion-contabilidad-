@@ -13,7 +13,10 @@ export const ContextLoginProvider = ({ children }) => {
     const navigate = useNavigate();
 
     const [user_form, set_user_form] = useState('');
-    const [user_true, setUserTrue] = useState(()=>sessionStorage.getItem('accessTrue'));
+    const [user_true, setUserTrue] = useState(() => {
+        const storedUser = sessionStorage.getItem('accessTrue');
+        return storedUser ? JSON.parse(storedUser) : null; // Devuelve el objeto o null si no existe
+    });
 
     useEffect(() => {
         if (user_form['login-user']) {
@@ -23,11 +26,14 @@ export const ContextLoginProvider = ({ children }) => {
 
             if (user_form.password && user_form.email){
                 let response = login(formData);
+
                 response.then((data) => {
                     if (data['access_token'] && data['token_type']) {
+                   
                         const accessTrue = {
                             access_token: data['access_token'],
                             token_type: data['token_type'],
+                            user_id: data['user_id']
                         }
                         sessionStorage.setItem('accessTrue', JSON.stringify(accessTrue));
                         setUserTrue(data);
@@ -44,7 +50,6 @@ export const ContextLoginProvider = ({ children }) => {
 
     }, [user_form]);
 
-    console.log(user_true, 'user_form');
     
     const values = { user_form, set_user_form, user_true, setUserTrue };
 

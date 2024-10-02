@@ -1,4 +1,5 @@
 import './form.style.scss';
+
 const Form = ({label, ...otherProps}) => {
     const { inputId, className } = otherProps;
 

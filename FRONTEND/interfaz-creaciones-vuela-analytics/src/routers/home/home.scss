@@ -1,0 +1,24 @@
+.home__container {
+    display: flex; /* Usa flexbox para distribuir horizontalmente */
+    width: 79.9%; /* Limita el ancho total a 80% */
+    margin-left: 20%; /* Esto asegura que el contenedor comience después del menú */
+    overflow-x: hidden;
+    height: 100vh;
+    // border: 1px solid    red;
+}
+
+.home__content {
+    width: 70%; /* El contenido principal ocupa el 70% del 80% */
+    // border: 1px solid orange;
+    padding: 20px;
+    text-align: center;
+}
+
+.home__analytics {
+    width: 30%; /* El área de análisis ocupa el 30% del 80% */
+    // border: 1px solid blue;
+    padding: 20px;
+    background-color: #80808099;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+}

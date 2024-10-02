@@ -1,0 +1,24 @@
+.config_and_logout_super_admin__container {
+    width: 100%;
+    height: auto;
+    position: relative;
+    margin-top: 0%;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+
+    button{
+        background-color: transparent;
+        border: none;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover{
+            color: black;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    }
+    
+}

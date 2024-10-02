@@ -19,4 +19,7 @@ def login_user(schema:OAuth2PasswordRequestForm , db: Session = Depends(get_db))
         raise HTTPException(status_code=401, detail="Contraseña incorrecta")
 
     access_token = create_access_token({"username": user_true.email})
-    return {"access_token": access_token, "token_type": "bearer"}
+    data_user = {"access_token": access_token, "token_type": "bearer", 'user_id': user_true.id}
+    # print(data_user)
+
+    return data_user

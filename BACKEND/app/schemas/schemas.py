@@ -86,6 +86,8 @@ class ProductMaterialSchema(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+    user_id: int
+
 
 class Token_data(BaseModel):
     username: Union[str, None] = None

@@ -1,0 +1,66 @@
+.card_admin_data__container {
+    display: flex;
+    width: 100%;
+    height: auto;
+    position: relative;
+
+    .asd {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: auto;
+        align-items: center;
+        border-radius: 25px;
+        background-color: whitesmoke;
+        border: 1px solid gray;
+        text-decoration: none;
+        color: black;
+        transition: transform 0.3s ease, border-color 0.3s ease; // Solo animar el borde y el escalado
+        position: relative;
+        transform-origin: center; // El origen del escalado está en el centro
+    
+        &:hover {
+            border-color: black; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+        }
+    }
+    
+    .card_admin_data__image {
+        width: 50px;
+        height: 50px; // Ajustar la altura para que mantenga la proporción circular
+        border-radius: 50%;
+        border: 1px solid gray;
+        overflow: hidden; // Asegurarse de que la imagen se ajuste bien dentro del contenedor circular
+        margin: 10px; // Centrar la imagen horizontalmente con `auto` y añadir margen superior e inferior
+    
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; // Mantener el aspecto correcto de la imagen sin deformarla
+            border-radius: 50%; // Mantener la forma circular de la imagen
+        }
+    }
+    
+
+    .card_admin_data__data-admin {
+        flex-grow: 2; // Para que esta sección ocupe todo el espacio restante
+        height: auto; // Ajustar la altura automáticamente según el contenido
+        text-align: start;
+        width: auto;
+
+        h4{
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+            margin-bottom: -8px;
+        }
+
+        span{
+            margin: 0;
+            padding: 0;
+            font-size: 10px;
+        }
+        
+    }
+}

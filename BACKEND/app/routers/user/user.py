@@ -16,7 +16,7 @@ def create_users(schema_user: Schema_user, db: Session = Depends(get_db)):
     response = create_user(schema_user, db)
     return response
 
-@router.get("/read_user" , status_code= status.HTTP_200_OK)
+@router.get("/read_user/{user_id}", response_model= Schema_user, status_code= status.HTTP_200_OK) 
 def read_users_id(user_id:int, db: Session = Depends(get_db), current_user: Schema_user=Depends(get_current_user)):
     response = read_users(user_id, db)
     return response 

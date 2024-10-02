@@ -1,0 +1,91 @@
+.panel_home_super_admin__container {
+    width: 100%;
+    height: 100vh; // Asegurar que use toda la altura visible
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    animation: slideIn 0.5s ease-in-out;
+
+
+    .panel_home_super_admin__content {
+        display: grid;
+        grid-template-columns: 0.35fr 1fr 0.4fr; // Ajuste de fracciones de espacio
+        grid-template-rows: auto;
+        grid-template-areas: 
+            "menu content analytics";
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        position: relative;
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr; // Cambia a una sola columna en pantallas pequeñas
+            grid-template-areas: 
+                "menu"
+                "content"
+                "analytics";
+        }
+    }
+
+    // .panel_home_super_admin__section--menu {
+    //     grid-area: menu;
+    //     background-color: #80808099; // Usar variables de color si las tienes
+    //     padding: 20px;
+    //     display: flex;
+    //     flex-direction: column;
+    //     align-items: center;
+    //     position: relative;
+        
+    //     .panel_home_super_admin__section--menu__card-admin-data {
+    //         display: flex;
+    //         flex-direction: column;
+    //         width: 100%;
+    //         height: 100%;
+    //         position: relative;
+    //         // border: 1px solid red;
+
+    //         // Aplica el estilo al segundo hijo
+    //         > div:nth-child(3) {
+    //             height: 100px; // Cambiar a auto para ajustarse al contenido
+    //             margin-top: auto; // Empuja este div hacia el final
+    //             width: 100%; // Asegúrate de que ocupe todo el ancho
+    //             display: flex; // Establecer display flex si quieres manejar su contenido
+    //             flex-direction: column; // Apilar elementos en vertical
+    //             text-align: start;
+    //             justify-content: center; // Alinear el contenido hacia abajo
+    //             border-top: 1px solid rgb(100, 96, 96); // Mostrar bordes para visualizar el contenido
+    //         }
+    //     }
+    // }
+
+    // Sección de contenido principal
+    .panel_home_super_admin__section--content {
+        grid-area: content;
+        background-color: #007bff; // Color azul mejorado
+        padding: 20px;
+    }
+
+    // Sección de analíticas
+    .panel_home_super_admin__section--analytics {
+        grid-area: analytics;
+        background-color: #80808099; // Usar variables de color si las tienes
+        padding: 20px;
+        // display: flex;
+        // flex-direction: column;
+        // align-items: center;
+        position: relative;
+    }
+}
+
+
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+
+    }
+    100% {
+        opacity: 1;
+    }
+}
