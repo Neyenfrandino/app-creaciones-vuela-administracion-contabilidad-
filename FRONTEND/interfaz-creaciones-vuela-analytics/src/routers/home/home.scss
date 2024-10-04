@@ -5,6 +5,9 @@
     overflow-x: hidden;
     height: 100vh;
     // border: 1px solid    red;
+
+    animation: slideIn 0.5s ease-in-out;
+
 }
 
 .home__content {
@@ -21,4 +24,17 @@
     background-color: #80808099;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
+}
+
+
+
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+
+    }
+    100% {
+        opacity: 1;
+    }
 }

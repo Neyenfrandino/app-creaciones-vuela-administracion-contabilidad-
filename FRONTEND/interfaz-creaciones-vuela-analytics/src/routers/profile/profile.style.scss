@@ -1,0 +1,50 @@
+.profile__container {
+    display: flex; /* Usa flexbox para distribuir horizontalmente */
+    width: 79.9%; /* Limita el ancho total a 80% */
+    margin-left: 20%; /* Esto asegura que el contenedor comience después del menú */
+    overflow-x: hidden;
+    height: 100vh;
+    // border: 1px solid    red;
+    position: relative;
+    animation: slideIn 0.5s ease-in-out;
+
+    
+
+    .profile__content {
+        margin: 0px 30px 30px 30px;
+        width: 100%;
+        height: auto;
+
+        .profile__header {
+            // margin-left: 30px;
+            width: 100%;
+            // border: 1px solid black;
+            height: auto;
+            display: block;
+            
+        }
+    
+        .profile__content--bento {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            // border: 1px solid red;
+            width: 100%;
+            height: auto;
+        }
+
+    }
+}
+
+
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+
+    }
+    100% {
+        opacity: 1;
+    }
+}
