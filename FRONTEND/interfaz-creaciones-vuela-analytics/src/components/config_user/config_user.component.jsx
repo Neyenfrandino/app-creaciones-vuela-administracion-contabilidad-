@@ -24,22 +24,24 @@ const ConfigUser = ({ usuario, typeFunc }) => {
         dispatch({ type: USER_ACTION_TYPES.SET_VALUE, field: name, payload: value });
     };
 
-    console.log(state, 'state');
+    
 
     return (
         <div className='profile__content--config--user'>
             <div className="profile__content--title">
                 <h4>Configuración de usuario</h4>
-                <input type="file" name="photo" id="photo" onChange={handleInputChange} />
             </div>
 
             <div className="profile__content--image">
+                {/* <input className='button-image' type="file" name="photo" id="photo" onChange={handleInputChange}  /> */}
+
                 <img src={usuario.photo} alt="image-profile" />
             </div>
 
             <div className="profile__content--data">
                 {Object.keys(usuario).map((key) => {
-                    if (key === 'photo') {
+                    console.log(key, 'key');
+                    if (key === 'photo' || key === 'password') {
                         return null; // Saltar la imagen
                     }
 

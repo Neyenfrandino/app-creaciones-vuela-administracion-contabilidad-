@@ -40,89 +40,96 @@ export const ContextQueryProvider = ({ children }) => {
 
     const { user_true } = useContext(ContextLogin);
 
-    const [state, dispatch] = useReducer(reducer, initialState);
+    // const [state, dispatch] = useReducer(reducer, initialState);
 
-    const { keyQuery, dataUser_db } = state;
+    // const { keyQuery, dataUser_db } = state;
 
-    const setkeyQuery = (payload) => {dispatch({ type: USER_ACCION_TYPES.SET_KEY_QUERY, payload: payload })};
+    // const setkeyQuery = (payload) => {dispatch({ type: USER_ACCION_TYPES.SET_KEY_QUERY, payload: payload })};
 
     // console.log(keyQuery, 'state');
 
-    // const [keyQuery, setkeyQuery] = useState('');
-
- /*    const [dataUser_db, setDataUser_db] = useState(() => {
-        const storedUser = sessionStorage.getItem(keyQuery);
-        return storedUser ? JSON.parse(storedUser) : null; // Devuelve el objeto o null si no existe
-    }); */
-
-
-
+    const [keyQuery, setkeyQuery] = useState('');
     // console.log(keyQuery, 'keyQuery');
+
+    const [dataUser_db, setDataUser_db] = useState({});
+
+    const storedUser = sessionStorage.getItem(`${keyQuery}`);
+    // console.log(dataUser_db, keyQuery, 'dataUser_db');
+    // console.log(sessionStorage.getItem(`${keyQuery}`), 'sessionStorage');
+    // console.log(keyQuery, 'keyQuery');
+
+    useEffect(() => {
+        if (storedUser) {
+            setDataUser_db(JSON.parse(storedUser))
+        }
+    }, [keyQuery]);
+
+
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     if (keyQuery['register-user'] && keyQuery.password && keyQuery.confirmPassword && keyQuery.email) {
+    useEffect(() => {
+        if (keyQuery['register-user'] && keyQuery.password && keyQuery.confirmPassword && keyQuery.email) {
     
-    //         const fetchData = async () => {
-    //             try {
-    //                 const response = await create_user(keyQuery);
+            const fetchData = async () => {
+                try {
+                    const response = await create_user(keyQuery);
 
-    //                 if (!response) {
-    //                     console.log(response);
-    //                     return
-    //                 } 
+                    if (!response) {
+                        console.log(response);
+                        return
+                    } 
                     
-    //                 navigate('/login');
+                    navigate('/login');
                     
-    //             } catch (error) {
-    //                 console.error('Error creating user:', error);
-    //             }
-    //         };
-    //         fetchData();
-    //     }
-    // }, [keyQuery]);
+                } catch (error) {
+                    console.error('Error creating user:', error);
+                }
+            };
+            fetchData();
+        }
+    }, [keyQuery]);
 
     
-    // useEffect(() => {
+
+    useEffect(() => {
         
-    //     if (keyQuery == 'get_users' && dataUser_db == null) {
+        if (keyQuery == 'get_userss' && dataUser_db == null) {
             
-    //         if (user_true['access_token'] && user_true['token_type'] && user_true['user_id']) {
-    //             console.log(keyQuery);
-    //                 const user_data = {
-    //                     token: user_true['access_token'],
-    //                     token_type: user_true['token_type'],
-    //                     user_id: user_true['user_id']
-    //                 }
-                    
-    //                 const fetchData = async () => {
-    //                     try {
-    //                         const response = await get_user(user_data);
+            if (user_true['access_token'] && user_true['token_type'] && user_true['user_id']) {
+                    const user_data = {
+                        token: user_true['access_token'],
+                        token_type: user_true['token_type'],
+                        user_id: user_true['user_id']
+                    }
 
-    //                         if (!response) {
-    //                             console.log(response);
-    //                             return
-    //                         } 
-                            
-    //                         // navigate('/login');
-    //                         setDataUser_db(response);
-    //                         sessionStorage.setItem(`${keyQuery}`, JSON.stringify(response)); 
-                            
-    //                     } catch (error) {
-    //                         console.error('Error creating user:', error);
-    //                     }
-    //                 };
-    //                 fetchData();
-    //             }
+                    const fetchData = async () => {
+                        try {
+                            const response = await get_user(user_data);
 
-    //     }
+                            if (!response) {
+                                console.log(response);
+                                return
+                            } 
+                            
+                            // navigate('/login');
+                            setDataUser_db(response);
+                            sessionStorage.setItem(`get_users`, JSON.stringify(response)); 
+                            
+                        } catch (error) {
+                            console.error('Error creating user:', error);
+                        }
+                    };
+                    fetchData();
+                }
+
+        }
    
-    // }, [keyQuery]);
+    }, [keyQuery]);
 
     
 
 
-    const values= { keyQuery, setkeyQuery, /* dataUser_db, setDataUser_db */ };
+    const values= { keyQuery, setkeyQuery, dataUser_db, setDataUser_db };
     return (
         <ContextQuery.Provider value={values}>
             {children}

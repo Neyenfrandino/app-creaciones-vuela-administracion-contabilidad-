@@ -25,6 +25,10 @@ const FuncConfigUser = ({ dataFunc, setkeyQuery }) => {
                 })
 
             }
+
+            <div>
+                <button>Guardar</button>
+            </div>
         </div>
 
     </div>

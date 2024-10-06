@@ -3,13 +3,17 @@ from pydantic import BaseModel
 from datetime import datetime, date
 from typing import Union, Optional
 
-
 class Schema_user(BaseModel):  # Cambiado el nombre de la clase a PascalCase
     name: str
-    email: str
+    lastname: Optional[str] = None  # Puede ser None
+    username: Optional[str] = None  # Puede ser None
+    email: str  # Obligatorio
     password: str
+    phone: Optional[str] = None  # Puede ser None
+    address: Optional[str] = None  # Puede ser None
+    city: Optional[str] = None  # Puede ser None
+    photo: Optional[str] = None  # Puede ser None
    
- 
     class Config:
         # orm_mode = True  # Permite crear instancias desde objetos ORM (como los de SQLAlchemy)
         from_attributes = True # Permite usar from_orm para crear instancias desde atributos de objetos ORM

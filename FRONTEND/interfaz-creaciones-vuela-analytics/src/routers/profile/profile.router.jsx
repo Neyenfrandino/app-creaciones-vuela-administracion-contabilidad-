@@ -1,4 +1,4 @@
-import { useContext , useState} from 'react';
+import { useContext , useEffect, useState} from 'react';
 import { ContextQuery } from '../../context/contexts_query/contexts_query.jsx';
 
 import ConfigUser from '../../components/config_user/config_user.component';
@@ -19,14 +19,18 @@ const usuario  = {
 }
 
 const ProfileRouter = ({dataFunc}) => {
-    // const { setkeyQuery } = useContext(ContextQuery);
+    const { setkeyQuery, dataUser_db } = useContext(ContextQuery);
     const [actionFunc, setActionFunc] = useState('get_users');
 
     const handleActionFunc = (key) => {
         setActionFunc(key);
     }
 
-    console.log(actionFunc, 'actionFunc');
+    useEffect(() => {
+        setkeyQuery(actionFunc);
+    }, [ actionFunc ]);
+
+    console.log(dataUser_db, 'dataUser_db');
 
     return (
         <div className="profile__container">
@@ -37,7 +41,7 @@ const ProfileRouter = ({dataFunc}) => {
 
                 <div className='profile__content--bento'>
 
-                    <ConfigUser usuario={usuario} typeFunc={actionFunc} />
+                    <ConfigUser usuario={dataUser_db} typeFunc={actionFunc} />
 
                     <FuncConfigUser dataFunc={dataFunc} setkeyQuery={handleActionFunc} />
 

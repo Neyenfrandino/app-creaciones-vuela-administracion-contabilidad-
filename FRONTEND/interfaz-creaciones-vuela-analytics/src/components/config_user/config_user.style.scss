@@ -3,6 +3,8 @@
     width: 100%;
     height: auto;
     position: relative;
+    
+    
 
     .profile__content--title{
         text-align: center;
@@ -38,6 +40,10 @@
             }
         }
 
+        .button-image{
+            
+        }
+
 
     }
 
@@ -48,7 +54,7 @@
         top: 130px;
         left: 0;
         width: 100%;
-        height: auto;
+        height: 300px;
         display: flex;
         flex-direction: column;
         // justify-content: center;
@@ -57,6 +63,25 @@
         background-color: #80808099  ;
         border-radius: 25px;
         padding-top: 70px;
+        overflow-y: auto;
+        // overflow-x: hidden;
+        &::-webkit-scrollbar {
+            width: 10px; /* Ancho de la barra de desplazamiento */
+        }
+    
+        /* Estilo para el pulgar de la barra de desplazamiento */
+        &::-webkit-scrollbar-thumb {
+            background-color: #5f2828; /* Color del pulgar de la barra de desplazamiento */
+            border-radius: 5px; /* Radio de borde del pulgar de la barra de desplazamiento */
+        }
+    
+        /* Estilo para el track de la barra de desplazamiento */
+        &::-webkit-scrollbar-track {
+            background: transparent; /* Color del track */
+            border-radius: 5px; /* Bordes redondeados del track */
+            margin: 15px; /* Margen para que el track no sobresalga */
+        }
+
 
         .profile__content--data__item{
             // margin-left: 30px;
@@ -66,29 +91,34 @@
             display: flex;
             justify-content: center;
             position: relative;
+            animation: slideInFrom 0.5s ease-in-out;
+            
+
 
             span {
                 width: 90%;
                 text-align: start;
                 font-size: 13px;
                 // border: 1px solid green;
+                animation: slideInFrom 0.5s ease-in-out;
+
             }
 
             .profile__content--data__item--form{
                 width: 90%;
-                height: auto;
+                height: 100%;
                 display: flex;
                 flex-direction: column;
                 // gap: 0;
                 // border: 1px solid rgb(0, 0, 0);
-                
-
+                animation: slideInFrom 0.5s ease-in-out;
 
                 label {
                     // width: 100%;
                     text-align: start;
                     font-size: 13px;
                     // border: 1px solid green;
+                    
                 }
 
                 input {
@@ -122,5 +152,16 @@
                 }   
             }
         }
+    }
+}
+
+@keyframes slideInFrom {
+    0% {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
     }
 }
