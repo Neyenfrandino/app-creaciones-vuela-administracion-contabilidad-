@@ -51,8 +51,6 @@ const Home = () => {
           <CardSeguimientoInventario title="Seguimiento de inventario" data={dataInventario} />
           <NotificacionesSuperAdmin />
         </div>
-
-        
       </div> 
     )
 }

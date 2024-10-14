@@ -11,11 +11,11 @@ const NotificacionesSuperAdmin = () => {
 
     return (
         <div className="notificaciones_super_admin__container">
-            <h5>Notificaciones</h5>
+            <h5 className='title'>Notificaciones</h5>
 
             <div className="notificaciones_super_admin__content">
                 <div className="notificaciones_super_admin__content__title">
-                    <h5>Nuevo products añadidos</h5>
+                    <h5 className='notificaciones_title'>Nuevo products añadidos</h5>
                 </div>
 
                 <div className="notificaciones_super_admin__content__button">

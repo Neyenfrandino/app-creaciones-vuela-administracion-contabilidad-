@@ -2,6 +2,7 @@ import { useContext, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 
 import { ContextLogin } from './context/context_login/context.login';
+import { ContextQuery } from './context/contexts_query/contexts_query.jsx';
 import Home from './routers/home/home';
 import AuthRouters from './routers/auth/auth.routers';
 
@@ -10,6 +11,7 @@ import NavSuperAdmin from './components/super_admin/nav_super_admin/nav_super_ad
 import ConfigAndLogoutSuperAdmin from './components/super_admin/config_and_logout/config_and_logout_super_admin.component';
 
 import ProfileRouter from './routers/profile/profile.router';
+import AnalyticsRouter from './routers/analytics/analytics.router';
 import './App.scss';
 
 
@@ -24,7 +26,7 @@ const object_data_descriptions = [
     defaultValue: "Esta sección permite gestionar los usuarios del sistema, incluyendo la modificación, consulta y eliminación de usuarios.",
     update_user: "Modificar usuario",
     get_users: "Obtener lista de usuarios",
-    delete_user: "Eliminar usuario"
+    delete_user: "Eliminar usuario",
   },
   {
     section_title: "Gestión de Productos",
@@ -93,6 +95,8 @@ const App = () => {
   const location = useLocation();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
   const { user_true } = useContext(ContextLogin);
+
+  const { setkeyQuery, dataUser_db, keyQuery } = useContext(ContextQuery);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -101,6 +105,13 @@ const App = () => {
     }
   }, [user_true, isAuthPage, navigate]);
 
+  const handleClick = () => {
+    // console.log("handleClick");
+    setkeyQuery('logout');
+  }
+  useEffect(() => {
+    setkeyQuery('get_users');
+  }, [keyQuery]);
 
   return (
     <>
@@ -114,7 +125,7 @@ const App = () => {
             <div className="nav__menu">
     
               <div className="nav__menu__data-user">
-                <CardAdminData dataAdmin={dataAdmin} image={"img/logo.jpg"} />
+                <CardAdminData dataAdmin={dataUser_db} image={"img/logo.jpg"} />
               </div>
     
               <div className="nav__menu__nav">
@@ -122,7 +133,7 @@ const App = () => {
               </div>
     
               <div className="nav__menu__logout-login">
-                <ConfigAndLogoutSuperAdmin />
+                <ConfigAndLogoutSuperAdmin handleClick={handleClick} />
               </div>
     
             </div>
@@ -132,6 +143,7 @@ const App = () => {
           <Routes>
             <Route path="/*" element={<Home />} />
             <Route path="/profile" element={<ProfileRouter dataFunc={object_data_descriptions[0]}/>} />
+            <Route path="/estadisticas" element={<AnalyticsRouter />} />
           </Routes>
 
         </>

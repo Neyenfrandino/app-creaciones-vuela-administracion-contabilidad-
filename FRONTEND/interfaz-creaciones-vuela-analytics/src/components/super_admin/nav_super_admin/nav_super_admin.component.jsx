@@ -15,7 +15,7 @@ let routers_nav_super_admin = [
         icon: 'fa fa-user',  // Icono de usuario
     },
     {
-        path: '/super-admin-estadisticas',
+        path: '/estadisticas',
         name: 'Estadísticas',
         icon: 'fa fa-chart-line',  // Icono de gráfico de líneas
     },
@@ -37,22 +37,18 @@ const NavSuperAdmin = ({ routers }) => {
 
     return (
         <div className="nav_super_admin__container">
-            {/* <div className="nav_super_admin__content"> */}
-               
-                <ul className="nav_super_admin__content__nav__ul">
-                    {routers_nav_super_admin.map((router, index) => {
-                        return (
-                            <li key={index} className={`nav_super_admin__content__nav__ul__li ${location.pathname === router.path ? 'active_menu_admin' : ''}`} >
-                                <Link to={router.path} className="link">
-                                    <i className={router.icon}></i><span>{router.name}</span>
-                                </Link>
-                            </li>
-                        );
-                    })}
-                </ul>
-             
-            {/* </div> */}
-            
+            <ul className="nav_super_admin__content__nav__ul">
+                {routers_nav_super_admin.map((router, index) => {
+                    return (
+                        <li key={index} className={`nav_super_admin__content__nav__ul__li ${location.pathname === router.path ? 'active_menu_admin' : ''}`} >
+                            <Link to={router.path} className="link">
+                                <i className={router.icon}></i><span>{router.name}</span>
+                            </Link>
+                        </li>
+                    );
+                })}
+            </ul>
+        
         </div>    
     )
 }

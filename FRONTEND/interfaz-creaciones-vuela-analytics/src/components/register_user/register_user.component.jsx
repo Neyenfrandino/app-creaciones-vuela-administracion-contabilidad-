@@ -13,7 +13,7 @@ const defaultFormFields = {
 };
 
 const RegisterUser = () => { 
-    const { setUserContent } = useContext(ContextQuery);
+    const { setkeyQuery } = useContext(ContextQuery);
     const [formFields, setFormFields] = useState(defaultFormFields);
     const [error, setError] = useState(false);
     const { email, password, name, confirmPassword } = formFields;
@@ -31,7 +31,7 @@ const RegisterUser = () => {
         formFields['register-user'] = true;
 
         if (formFields.password === formFields.confirmPassword && formFields.password.length >= 6 && formFields.email !== '') {
-            setUserContent(formFields);
+            setkeyQuery(formFields);
             setFormFields(defaultFormFields);
             // console.log(formFields);
         }else{

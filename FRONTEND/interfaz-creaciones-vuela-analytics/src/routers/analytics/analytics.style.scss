@@ -1,0 +1,28 @@
+.analytics__container {
+    display: flex; /* Usa flexbox para distribuir horizontalmente */
+    width: 79.9%; /* Limita el ancho total a 80% */
+    margin-left: 20%; /* Esto asegura que el contenedor comience después del menú */
+    overflow-x: hidden;
+    height: 100vh;
+    position: relative;
+    animation: slideIn 0.5s ease-in-out;
+    overflow: hidden;
+
+    .analytics__title{
+        width: 100%;
+        height: auto;
+        display: block;
+        color: whitesmoke;
+        text-align: center;
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+
+    }
+    100% {
+        opacity: 1;
+    }
+}

@@ -17,7 +17,7 @@ const get_user = async (user_data) => {
         }
 
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         return data;
     } catch (error) {
         console.error('Error en la solicitud de creación de usuario:', error);

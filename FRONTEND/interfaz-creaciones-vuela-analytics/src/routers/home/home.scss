@@ -15,14 +15,18 @@
     // border: 1px solid orange;
     padding: 20px;
     text-align: center;
+    z-index: 1;
+    color: whitesmoke;
 }
 
 .home__analytics {
+    z-index: 2;
     width: 30%; /* El área de análisis ocupa el 30% del 80% */
     // border: 1px solid blue;
     padding: 20px;
-    background-color: #80808099;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    // background-color: #80808022;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border-radius: 25px;
 
 }
 

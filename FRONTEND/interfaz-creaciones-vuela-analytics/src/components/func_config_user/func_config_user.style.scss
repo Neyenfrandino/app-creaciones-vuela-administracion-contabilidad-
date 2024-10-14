@@ -4,11 +4,6 @@
     height: auto;
     position: relative;
 
-    .profile__content--function__title{
-        text-align: center;
-        width: 100%;
-    }
-
 
     .profile__content--function__items{
         display: flex;
@@ -24,8 +19,6 @@
         border: 1px solid rgb(0, 0, 0);
         background-color: #80808099  ;
         border-radius: 25px;
-        
-    
 
         .profile__content--function__item{
         
@@ -43,7 +36,7 @@
                 border: none;
                 box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
                 transition: all 0.3s ease-in-out;
-
+                
                 &:hover {
                     cursor: pointer;
                     background-color: rgb(0, 0, 0);
@@ -54,3 +47,4 @@
         }
     }
 }
+
