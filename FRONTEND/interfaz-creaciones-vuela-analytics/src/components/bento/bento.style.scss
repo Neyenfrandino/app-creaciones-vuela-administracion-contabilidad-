@@ -1,0 +1,46 @@
+.bento__container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Cuatro columnas */
+    grid-gap: 20px; /* Espacio entre los elementos */
+    width: 90%;
+    flex-grow: 1; /* Hace que este elemento crezca para ocupar el espacio disponible */
+
+    .bento-item {
+        color: black; /* Cambiado a negro por defecto */
+        padding: 20px;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.5);
+        transition: all 0.5s ease-in-out;
+        cursor: pointer;
+        height: 150px; /* Tamaño predeterminado para todos los elementos */
+        text-decoration: none;
+        display: flex;
+        flex-direction: column; /* Coloca los hijos en columna */
+        justify-content: center; /* Centra verticalmente */
+        align-items: center; /* Centra horizontalmente */
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white; /* El texto se vuelve blanco al hacer hover */
+        }
+
+        .bento-item-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Centra verticalmente el contenido */
+            align-items: center; /* Centra horizontalmente el contenido */
+            height: 100%;
+
+            .icon {
+                text-align: center; /* Asegura que el icono esté centrado */
+                font-size: 1.8rem;
+                margin-bottom: 10px; /* Espacio debajo del icono */
+                color: inherit; /* Cambia a heredar el color del padre */
+            }
+
+            span {
+                color: inherit; /* Cambia a heredar el color del padre */
+            }
+        }
+    }
+}

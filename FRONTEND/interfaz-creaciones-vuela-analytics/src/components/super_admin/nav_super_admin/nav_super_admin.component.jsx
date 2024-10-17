@@ -25,7 +25,7 @@ let routers_nav_super_admin = [
         icon: 'fa fa-file-alt',  // Icono de archivo o informe
     },
     {
-        path: '/super-admin-inventario',
+        path: '/inventario',
         name: 'Inventario',
         icon: 'fa fa-boxes',  // Icono de cajas (inventario)
     }

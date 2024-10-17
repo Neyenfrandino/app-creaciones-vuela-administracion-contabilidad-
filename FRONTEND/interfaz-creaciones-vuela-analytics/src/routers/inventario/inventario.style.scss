@@ -1,4 +1,4 @@
-.analytics__container {
+.inventario__container {
     display: flex;
     flex-direction: column;
     width: 80%;
@@ -9,7 +9,7 @@
     overflow: auto;
     align-items: center;
 
-    .analytics__title {
+    .inventario__header {
         width: 100%;
         display: flex;
         justify-content: center; /* Centra horizontalmente el título */
@@ -17,16 +17,14 @@
         text-align: center;
         margin-bottom: 20px; /* Espacio debajo del título */
     }
-}
 
-/* Animación de entrada */
-@keyframes slideIn {
-    0% {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateX(0);
+    .inventario__content {
+        display: flex;
+        width: 90%;
+        display: flex;
+        justify-content: center; /* Centra horizontalmente el contenido */
+        color: whitesmoke;  
+        text-align: center;
+        margin-bottom: 20px; /* Espacio debajo del contenido */
     }
 }

@@ -45,7 +45,7 @@ def get_total_sell_revenue(user_id, db):
     
     filter_user_db_sell = db.query(SellProduct).filter(SellProduct.user_id == user_id).all()
                         
-    print(len(filter_user_db_sell))
+    print(len(filter_user_db_sell), 'hola mundo')
     total_revenue = 0
 
     for sell_product in filter_user_db_sell:

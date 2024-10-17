@@ -7,146 +7,6 @@ import get_user from '../../utlis/user/get_user';
 import update_user from '../../utlis/user/update_user';
 import delete_user from '../../utlis/user/delete_user';
 
-// export const ContextQuery = createContext({
-//   keyQuery: {},
-//   setkeyQuery: () => {},
-//   dataUser_db: '',
-//   setDataUser_db: () => {},
-// });
-
-// export const ContextQueryProvider = ({ children }) => {
-//   const { user_true } = useContext(ContextLogin);
-//   const navigate = useNavigate();
-
-//   const [keyQuery, setkeyQuery] = useState({});
-//   const [dataUser_db, setDataUser_db] = useState(null);
-//   const storedUser = sessionStorage.getItem(keyQuery);
-
-//   // Aqui se acctualiza el estado de dataUser_db con el valor del sessionStorage guardado en las cookies 
-//   useEffect(() => {
-//     if (storedUser) {
-//       setDataUser_db(JSON.parse(storedUser));
-//     }
-//   }, []);
-
-//   // Aqui se crea la conección con el backend para crear el usuario
-//   useEffect(() => {
-//     if (keyQuery['register-user'] && keyQuery.password && keyQuery.confirmPassword && keyQuery.email) {
-//       const fetchData = async () => {
-//         try {
-//           const response = await create_user(keyQuery);
-//           if (response) {
-//             navigate('/login');
-//           }
-//         } catch (error) {
-//           console.error('Error al crear el usuario:', error);
-//         }
-//       };
-//       fetchData();
-//     }
-//   }, [keyQuery]);
-
-//   // Aqui se crea la conección con el backend para obtener el usuario
-//   useEffect(() => {
-//     if (keyQuery === 'get_users' && !dataUser_db && user_true) {
-
-//       const fetchData = async () => {
-//         try {
-//           const userData = {
-//             token: user_true['access_token'],
-//             token_type: user_true['token_type'],
-//             user_id: user_true['user_id']
-//           };
-//           const response = await get_user(userData);
-//           if (response) {
-//             setDataUser_db(response);
-//             sessionStorage.setItem('get_users', JSON.stringify(response));
-//           }
-//         } catch (error) {
-//           console.error('Error al obtener el usuario:', error);
-//         }
-//       };
-//       fetchData();
-//     }
-//   }, [keyQuery, dataUser_db, user_true]);
-
-//   // Aqui se crea la conección con el backend para actualizar el usuario
-//   useEffect(() => {
-    
-//     if (keyQuery.typeFunc === 'update_user' && user_true) {
-//         const fetchData = async () => {
-//         try {
-//           const response = await update_user(keyQuery.newState, user_true);
-//           if (response) {
-//             // Actualizar el estado y el sessionStorage con los nuevos datos
-//             setDataUser_db(prevData => ({
-//               ...prevData,
-//               ...keyQuery.newState
-//             }));
-//             sessionStorage.setItem('get_users', JSON.stringify({
-//               ...dataUser_db,
-//               ...keyQuery.newState
-//             }));
-//           }
-//         } catch (error) {
-//           console.error('Error al actualizar el usuario:', error);
-//         }
-//       };
-//       fetchData();
-//     }
-//   }, [keyQuery, user_true, dataUser_db]);
-
-//   // Aqui se crea la conección con el backend para eliminar el usuario
-//   useEffect(() => {
-//     if (keyQuery == 'delete_user' && user_true) {
-//       const fetchData = async () => {
-//         try {
-//           const response = await delete_user(user_true);
-//           if (response) {
-//             navigate('/login');
-//           }
-//           setDataUser_db(null);
-//           sessionStorage.removeItem('get_users');
-//         } catch (error) {
-//           console.error('Error al eliminar el usuario:', error);
-//         }
-//       };
-
-//       fetchData();
-//     }
-
-//   }, [keyQuery == 'delete_user' && user_true]);
-
-//   // Aqui se crea la conección con el backend para el logout
-//   useEffect(() => {
-//     if (keyQuery == 'logout') {
-//       sessionStorage.removeItem('get_users');
-//       sessionStorage.clear();
-//       setDataUser_db(null);
-//       navigate('/login');
-//     }
-//   }, [keyQuery]);
-
-//   const values = {
-//     keyQuery,
-//     setkeyQuery,
-//     dataUser_db,
-//     setDataUser_db
-//   };
-
-//   return (
-//     <ContextQuery.Provider value={values}>
-//       {children}
-//     </ContextQuery.Provider>
-//   );
-// };
-
-
-// import React, { createContext, useContext, useReducer, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { create_user, get_user, update_user, delete_user } from './api'; // Asegúrate de importar tus funciones correctamente.
-// import { ContextLogin } from './ContextLogin'; // Importa el contexto de login.
-
 export const ContextQuery = createContext({
   keyQuery: {},
   setkeyQuery: () => {},
@@ -190,7 +50,8 @@ export const ContextQueryProvider = ({ children }) => {
   const setDataUser_db = (data) => {
     dispatch({ type: 'setDataUser_db', payload: data });
   };
-
+  
+  console.log(state, 'jajajjajajajjaja')
   // Cargar datos de sessionStorage al inicio
   useEffect(() => {
     const storedUser = sessionStorage.getItem('get_users');
@@ -301,3 +162,4 @@ export const ContextQueryProvider = ({ children }) => {
     </ContextQuery.Provider>
   );
 };
+  
