@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from app.db.models import SellProduct, User, Product
 
 def create_sell_product(user_id, schema, db):
+
     try:
         user_true = db.query(User).filter(User.id == user_id).first()
 

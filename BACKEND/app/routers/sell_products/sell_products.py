@@ -10,12 +10,13 @@ from app.oauth import get_current_user
 
 router = APIRouter(prefix=f"/sell_products", tags=["sell_products"])
 
-@router.post("/create_sell_product", status_code= status.HTTP_201_CREATED)
-def create_sell_products(user_id:int, schema_sell_product: SellProductSchema, db: Session = Depends(get_db), current_user: SellProductSchema = Depends(get_current_user)):
+@router.post("/create_sell_product/{user_id}", status_code= status.HTTP_201_CREATED)
+def create_sell_products(user_id: int, schema_sell_product: SellProductSchema, db: Session = Depends(get_db), current_user: SellProductSchema = Depends(get_current_user)):
     response = create_sell_product(user_id, schema_sell_product, db)
+    print(response, 'ssssssssssssssssssss')
     return response
 
-@router.get("/get_all_sell_products", status_code= status.HTTP_200_OK)
+@router.get("/get_all_sell_products/{user_id}", status_code= status.HTTP_200_OK)
 def get_all_sell_products(user_id:int, db: Session = Depends(get_db), current_user: SellProductSchema = Depends(get_current_user)):
     response = get_sell_products_all(user_id, db)
     return response

@@ -53,6 +53,17 @@ def read_product(user_id, product_id, db):
     except Exception as e:
         raise HTTPException(status_code=409, detail=str(e))
 
+def read_products_all(user_id, db):
+    user_true = db.query(User).filter(User.id == user_id).first()
+    try:
+        if user_true is None:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        products = db.query(Product).filter(Product.user_id == user_true.id).all()
+        return products
+    except Exception as e:
+        raise HTTPException(status_code=409, detail=str(e))
+
 def update_product(user_id, product_id, schema, db):
     try:
         # Verificar si el usuario existe

@@ -11,17 +11,19 @@ const get_user = async (user_data) => {
             }
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Error en la creación del usuario');
-        }
+        const data = await response.json(); // Obtén los datos
 
-        const data = await response.json();
-        // console.log(data);
-        return data;
+        // Devuelve tanto el estado como los datos
+        return {
+            status: response.status,
+            data: data
+        };
     } catch (error) {
-        console.error('Error en la solicitud de creación de usuario:', error);
-        return 'error';
+        console.error('Error en la solicitud de usuario:', error);
+        return {
+            status: 'error',
+            data: null
+        };
     }
 };
 

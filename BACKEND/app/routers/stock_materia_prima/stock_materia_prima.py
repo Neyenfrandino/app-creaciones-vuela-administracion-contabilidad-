@@ -8,7 +8,7 @@ from app.oauth import get_current_user
 
 router = APIRouter(prefix=f"/stock_materia_prima", tags=["stock_materia_prima"])
 
-@router.post("/create_stock_materia_prima", status_code= status.HTTP_201_CREATED)
+@router.post("/create_stock_materia_prima/{user_id}", status_code= status.HTTP_201_CREATED)
 def create_stock_materia_prima(user_id:int, schema_stock_materia_prima: StockMateriaPrimaSchema, db: Session = Depends(get_db), current_user: StockMateriaPrimaSchema = Depends(get_current_user)):
     response = create_materia_prima(user_id, schema_stock_materia_prima, db)
     return response

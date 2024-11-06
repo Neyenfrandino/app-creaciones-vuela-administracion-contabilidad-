@@ -1,0 +1,10 @@
+{
+    "sell_product": {
+        "products_id": ["Producto", "required", "text", "get_products"],
+        "date_sell": ["Fecha de venta", "required", "date"],
+        "quantity_sell": ["Cantidad de productos", "required", "number"],
+        "price_unit": ["Precio unitario", "required", "number"],
+        "paid": ["Pagado", "required", "boolean", "select"],
+        "payment_method": ["Método de pago", "required", "text", "select"]
+    }
+}

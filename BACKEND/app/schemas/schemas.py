@@ -3,6 +3,14 @@ from pydantic import BaseModel
 from datetime import datetime, date
 from typing import Union, Optional
 
+class create_user_schema(BaseModel): 
+    name: str
+    email: str
+    password: str
+    class Config:
+        orm_mode = True
+        from_attributes = True
+
 class Schema_user(BaseModel):  # Cambiado el nombre de la clase a PascalCase
     name: str
     lastname: Optional[str] = None  # Puede ser None

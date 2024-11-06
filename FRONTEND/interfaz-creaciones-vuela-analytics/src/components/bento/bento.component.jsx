@@ -17,7 +17,6 @@ import {
 import './bento.style.scss'
 
 const Bento = ({data}) => {
-    
     const iconMapping = {
         faUsers: faUsers,
         faBoxes: faBoxes,
@@ -29,19 +28,20 @@ const Bento = ({data}) => {
         faChartLine: faChartLine,
         faMoneyBillAlt: faMoneyBillAlt
       };
-      
+
       return(
         <div className='bento__container'>   
             {data.map((item, index) => (
                 
                 <Link 
-                    to={item.route} // Asegúrate de que este sea el path correcto
+                    to={`${item.route}`} // Asegúrate de que este sea el path correcto
                     key={index} 
                     className={`bento-item`}
                 >
                     <div className='bento-item-content'>
-                        <span className='icon'><FontAwesomeIcon icon={iconMapping[item.icon]} /></span>
-                        <span className='title'>{item.section_title}</span>
+                        <span className='icon'><FontAwesomeIcon icon={iconMapping[item.section.icon]} /></span>
+                        <span className='title'>{item.section.title}</span>
+                        
                     </div>
                 </Link>
             ))}

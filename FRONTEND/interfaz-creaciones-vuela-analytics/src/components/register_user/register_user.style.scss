@@ -1,22 +1,23 @@
 .register_user__container {
-
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    width: auto;
+    align-items: center; // Centra horizontalmente
+    // justify-content: center; // Centra verticalmente
+    height: 100vh; // Altura completa de la ventana
+    width: 100%; // Ancho completo
     background-color: transparent;
     animation: slideIn 0.5s ease-in-out;
     overflow: auto;
-    margin-bottom: 3%;
+    position: relative;
+    
 
-    .register_user__haders{
+    .register_user__haders {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1%;
+        align-items: center; // Alinea los elementos hijos
+        justify-content: center; // Centra el contenido
+        margin-bottom: 20px; // Espaciado ajustado
+        
 
         h1 {
             font-size: 50px;
@@ -24,28 +25,29 @@
             margin-bottom: 20px;
             font-weight: bold;
             text-align: center;
-          }
-        
+        }
+
         span {
             font-size: 15px;
             color: #eeede8;
             text-align: center;
-          }
+        }
     }
 
-    .register_user__form{
+    .register_user__form {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: center; // Centra el contenido del formulario
         justify-content: center;
-        width: 400px;
         background-color: rgba(0, 0, 0, 0.6);
         border-radius: 10px;
         padding: 50px;
         border: 2px solid #eeede855;
+        max-width: 400px; // Limita el ancho máximo
+        width: 100%; // Ocupa todo el ancho permitido
 
-        .register_user__button{
-            width: 50%;
+        .register_user__button {
+            width: 50%; // Ancho del botón
             padding: 10px;
             border: none;
             border-radius: 5px;
@@ -56,13 +58,12 @@
             cursor: pointer;
             transition: all 0.3s ease;
 
-            
             &:hover {
                 background-color: #C96E50;
                 color: white;
-                transform: scale(.95);
+                transform: scale(0.95);
                 box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
-              }
+            }
         }
     }
 
@@ -71,14 +72,14 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin-top: 2%;
-        width: 400px;
+        margin-top: 20px; // Espaciado ajustado
+        width: 100%; // Se adapta al contenedor
 
         p {
             font-size: 15px;
             color: #eeede8;
             text-align: center;
-          }
+        }
 
         a {
             font-size: 15px;
@@ -88,20 +89,15 @@
     }
 }
 
-.error{
+.error {
     color: red;
-    border-bottom: 1px solid red;
-    border-left: 1px solid red;
-    border-right: 1px solid red;
+    border: 1px solid red; // Simplificado
     background-color: #ff000088;
-
-
 }
 
 @keyframes slideIn {
     0% {
         opacity: 0;
-
     }
     100% {
         opacity: 1;

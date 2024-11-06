@@ -1,0 +1,37 @@
+.form__input {
+    // margin-bottom: 20px;
+    background-color: rgba(177, 177, 177, 0.5);
+}
+
+.handle__submit{
+    height: auto;
+    position: relative;
+}
+
+.handle__button__container{
+    display: flex;
+    justify-content: end;
+    align-items: start;
+    // margin-top: 20px;
+    width: 100%;
+    height: 70px;
+    // background-color: royalblue;
+}
+.handle__button{
+    display: flex;
+    margin: 0 auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    padding: 10px 60px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: rgba(255, 81, 147, 0.8);
+        transition: all 0.3s ease;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        transform: scale(0.9);
+    }
+}

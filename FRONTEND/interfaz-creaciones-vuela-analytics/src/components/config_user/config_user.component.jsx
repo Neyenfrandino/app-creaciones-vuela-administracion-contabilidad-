@@ -1,7 +1,11 @@
 import { useReducer } from 'react';
+import { useLocation } from 'react-router-dom';
 import './config_user.style.scss';
 
 const ConfigUser = ({ usuario, typeFunc, usuarioA, onStateChange }) => {
+
+    const location = useLocation();
+    
     const USER_ACTION_TYPES = {
         SET_VALUE: 'SET_VALUE',
     };
@@ -10,7 +14,6 @@ const ConfigUser = ({ usuario, typeFunc, usuarioA, onStateChange }) => {
         switch (action.type) {
             case USER_ACTION_TYPES.SET_VALUE:
                 const newState = { ...usuario, [action.field]: action.payload }; // Cambiar 'usuario' a 'state'
-                // console.log(newState)
                 onStateChange(newState, typeFunc); // Enviar el estado actualizado al componente padre
                 return newState;
             default:
@@ -36,8 +39,7 @@ const ConfigUser = ({ usuario, typeFunc, usuarioA, onStateChange }) => {
     const handleImageChange = async (e) => {
         e.preventDefault();
         const file = e.target.files[0];
-        console.log(file);
-
+     
         if (file) {
             const compressImage = (file, maxWidth, maxHeight, quality) => {
                 return new Promise((resolve, reject) => {
@@ -102,23 +104,30 @@ const ConfigUser = ({ usuario, typeFunc, usuarioA, onStateChange }) => {
 
     return (
         <div className='profile__content--config--user'>
+
+            
             <div className="profile__content--image">
+                
                 <img 
                     src={state ? state.photo : usuario.photo || usuarioA.photo}
                     alt="image-profile" 
-                    className="profile-image" 
-                />
+                    className={`${location.pathname !== '/profile' ? '' : 'profile-image'}`}
+                    style={location.pathname !== '/profile' ? { opacity: '0' } : {}}
+                                    />
                 {
-                    typeFunc == 'update_user' ?
-                        <label htmlFor="file-upload" className="button-image">
-                        <input
-                            type="file"
-                            name="file-upload"
-                            id="file-upload"
-                            accept="image/*"
-                            onChange={handleImageChange}
-                        />
-                        <span className="button-icon">+</span>
+                    typeFunc == 'update' ?
+                    <label 
+                        htmlFor="file-upload" 
+                        className={`${location.pathname !== '/profile' ? '' : 'button-image'}`} 
+                        style={location.pathname !== '/profile' ? { opacity: 0 } : {}}>
+                            <input
+                                type="file"
+                                name="file-upload"
+                                id="file-upload"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                            />
+                            <span className="button-icon">+</span>
                     </label>:null
 
                 }
@@ -133,7 +142,7 @@ const ConfigUser = ({ usuario, typeFunc, usuarioA, onStateChange }) => {
 
                     return (
                         <div key={key} className="profile__content--data__item">
-                            {typeFunc === 'update_user' ? (
+                            {typeFunc === 'update' ? (
                                 <form className="profile__content--data__item--form">
                                     <label htmlFor={key}>{key}</label>
                                     <input

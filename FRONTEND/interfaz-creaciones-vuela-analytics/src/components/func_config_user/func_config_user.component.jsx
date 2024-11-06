@@ -7,19 +7,14 @@ const FuncConfigUser = ({ dataFunc, setkeyQuery, children }) => {
             <div className="profile__content--function__items">
                 {
                     Object.keys(dataFunc).map((key, index) => {
-                        if (key === 'defaultValue' || key === 'section_title') {
-                            return null;
-                            
-                        }
                         return (
                             <div key={index} className="profile__content--function__item">
-                                <button onClick={() => setkeyQuery(key)}>{dataFunc[key]}</button>
+                                <button onClick={() => setkeyQuery(key)}>{key.toUpperCase()}</button>
                             </div>
                         );
                     })
 
                 }
-
                 {children}
             </div>
 

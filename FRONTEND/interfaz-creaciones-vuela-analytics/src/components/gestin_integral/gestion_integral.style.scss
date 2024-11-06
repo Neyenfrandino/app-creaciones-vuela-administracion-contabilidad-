@@ -1,0 +1,86 @@
+.gestion_stock__container {
+    display: flex; /* Usa flexbox para distribuir horizontalmente */
+    width: 99.8%; /* Limita el ancho total a 80% */
+    // margin-left: 20%; /* Esto asegura que el contenedor comience después del menú */
+    overflow-x: hidden;
+    height: 100%;
+    position: relative;
+    animation: slideIn 0.5s ease-in-out;
+    overflow: auto;
+
+
+    .gestion_stock__content {
+        margin: 0px 30px 30px 30px;
+        width: 100%;
+        height: auto;
+
+        .gestion_stock__header {
+            // margin-left: 30px;
+            width: 100%;
+            // border: 1px solid black;
+            height: auto;
+            display: block;
+            color: whitesmoke;
+            text-align: center;
+            
+        }
+    
+        .gestion_stock__content--bento {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            // border: 1px solid red;
+            width: 100%;
+            height: auto;
+        }
+
+    }
+}
+
+
+.save_changes{
+    width: 30%;
+    height: 40px;
+    background-color: rgb(0, 128, 0, 0.5);
+    margin: 0 auto;
+    font-size: 13px;
+    border-radius: 25px;
+    outline: none;
+    border: none;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease-in-out;
+    
+    &:hover {
+        cursor: pointer;
+        background-color: rgb(0, 0, 0);
+        color: white;
+        transition: all 0.3s ease-in-out;
+    }
+}
+
+.save_changes--disabled {
+    width: 30%;
+    height: 40px;
+    background-color: rgba(66, 66, 66, 0.5);  // Cambiado a rgba para claridad
+    margin: 0 auto;
+    font-size: 13px;
+    border-radius: 25px;
+    outline: none;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);  // Sombra más sutil
+    color: rgba(255, 255, 255, 0.8);  // Texto en un color blanco más suave
+    cursor: not-allowed;  // Indica que el botón está deshabilitado
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+
+    }
+    100% {
+        opacity: 1;
+    }
+}

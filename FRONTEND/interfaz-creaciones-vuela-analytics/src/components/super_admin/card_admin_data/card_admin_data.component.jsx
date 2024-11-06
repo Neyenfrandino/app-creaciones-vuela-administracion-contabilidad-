@@ -3,7 +3,6 @@ import './card_admin_data.style.scss';
 
 const CardAdminData = ({dataAdmin}) => {
     const { name, email, photo } = dataAdmin || '';
-    console.log(email)
     
     return (
         <div className="card_admin_data__container">

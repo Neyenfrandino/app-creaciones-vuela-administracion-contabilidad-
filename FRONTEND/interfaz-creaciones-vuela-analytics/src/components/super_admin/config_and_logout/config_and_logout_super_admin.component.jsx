@@ -27,4 +27,4 @@ const ConfigAndLogoutSuperAdmin = ({handleClick}) => {
     )
 }
 
-export default ConfigAndLogoutSuperAdmin;
+export default ConfigAndLogoutSuperAdmin; 
