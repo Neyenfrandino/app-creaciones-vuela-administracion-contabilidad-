@@ -6,8 +6,7 @@ import Select from '../select/select.component';
 import './handle_created.style.scss';
 
 const HandleCreated = ({ valueVarObject, handleStateCreated, openConfirmation, handleClose, handleActionFunc, filterData}) => {
-    console.log(valueVarObject)
-
+  
     const [ newState, setNewState ] = useState({});
 
     const [error, setError] = useState(false)
@@ -38,7 +37,6 @@ const HandleCreated = ({ valueVarObject, handleStateCreated, openConfirmation, h
 
     const handleOnChange = (e) => {
         const { name, value } = e.target;
-        console.log(name, value)
 
         setNewState({
             ...newState,
@@ -54,16 +52,22 @@ const HandleCreated = ({ valueVarObject, handleStateCreated, openConfirmation, h
 
         setNewState(initialNewState);
     }, [valueVarObject]);
-
-
-
+    
 
     return (
         <form action="" className='handle__submit' onSubmit={handleSubmit}>
             {Object.keys(valueVarObject).map((item, index) => (
                 <React.Fragment key={index}>
                     {valueVarObject[item][3] && (valueVarObject[item][3] === 'select' || valueVarObject[item][3].includes('get')) ? (
-                        <Select item={item} value={valueVarObject[item][3]} handleActionFunc={handleActionFunc} options={filterData} handleSelectValue={handleOnChange} />
+                        <Select 
+                            item={item} 
+                            value={valueVarObject[item][3]} 
+                            handleActionFunc={handleActionFunc} 
+                            options={filterData} 
+                            handleSelectValue={handleOnChange} 
+                            className={`${error ? 'error' : ''}`}
+                        />
+
                     ) : (
                         <Form 
                             label={valueVarObject[item][0]}

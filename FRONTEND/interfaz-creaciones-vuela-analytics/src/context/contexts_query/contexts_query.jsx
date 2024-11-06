@@ -191,7 +191,7 @@ export const ContextQueryProvider = ({ children }) => {
   // Handle sales data fetching sell-products
   useEffect(() => {
     if (keys === 'sell-products' && values === 'get' && user_true && !sessionStorage.getItem(`${keys}-${values}`)) {
-
+     
       const fetchSalesData = async () => {
         try {
           const response = await get_ventas(user_true);
@@ -205,14 +205,13 @@ export const ContextQueryProvider = ({ children }) => {
 
       fetchSalesData();
     }
-  }, [state.keyQuery, user_true]);
+  }, [state.keyQuery, user_true, ]);
 
   // Handle sell-product creation
   useEffect(() => {
     if ( keys === "sell-products" && values.typeFunc === 'create' && keyQuery ) {
       const newData = {
         user_id : user_true.user_id,
-        // sell_date: new Date().toISOString().slice(0, 10),
         ...values.newState
       }
       
@@ -222,6 +221,10 @@ export const ContextQueryProvider = ({ children }) => {
           if(response === 'error'){
             console.log('estoy en error')
             return;
+          }
+
+          if (response.message == 'SellProduct created successfully') {
+            sessionStorage.removeItem(`sell-products-get`);
           }
         } catch (error) {
           handleError(error, 'Error creating sell-product:');

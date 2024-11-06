@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 
 import './select.style.scss';
-const Select = ({value, handleActionFunc, options, handleSelectValue }) => {
+const Select = ({value, handleActionFunc, options, handleSelectValue, item, className }) => {
+
 
     useEffect(() => {
         if (value === 'get_products') {
@@ -15,21 +16,25 @@ const Select = ({value, handleActionFunc, options, handleSelectValue }) => {
     return (
         <div className='select__container'>
             <select 
-                // id={inputId} 
-                name={options.key} 
-                // type={type} 
-                // className={className}
+                name={item}
                 onChange={handleSelectValue} 
-                
-                defaultValue={''}
+                defaultValue=""
+                className={className}
             >
                 <option value="" disabled>Selecciona una opción</option>
-                {options.map(option => (
-                    <option key={option.value} value={option.value}>{option.label}</option>
+                {options.map((option) => (
+                    Object.keys(option).map((nameItem) => (
+                        option[nameItem].key === item ? (
+                            <option key={option[nameItem].value} value={option[nameItem].value} name={option[nameItem].key}>
+                                {option[nameItem].label}
+                            </option>
+                        ) : null
+                    ))
                 ))}
             </select>
         </div>
-    )
+    );
+    
 }   
 
 export default Select;

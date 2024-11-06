@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import './table.style.scss';
 
-const Table = ({ data, handleOpenModal, handleUserStateChange, openConfirmation }) => {   
+const Table = ({ data, filterProductsTag, handleOpenModal, handleUserStateChange, openConfirmation }) => {   
     data = data.sell_products
 
     const [editingCell, setEditingCell] = useState({ rowIndex: null, field: null });
@@ -9,6 +9,12 @@ const Table = ({ data, handleOpenModal, handleUserStateChange, openConfirmation 
     const [tableData, setTableData] = useState(data);
     const [newState, setNewState] = useState({});
     const editableRef = useRef(null);
+
+    // useEffect(() => {
+    //     if (schemas.sell_product['products_id'][3] === 'get_products') {
+    //         handleActionFunc(schemas.sell_product['products_id'][3]);
+    //     }
+    // },[])
 
 
     useEffect(() => {
@@ -43,8 +49,12 @@ const Table = ({ data, handleOpenModal, handleUserStateChange, openConfirmation 
     const renderCell = useCallback((item, index, field) => {
         const isEditing = editingCell.rowIndex === index && editingCell.field === field;
         const value = field === 'paid' ? (item[field] ? 'Sí' : 'No') :
-                     field === 'total' ? (item.price_unit * item.quantity_sell) :
-                     item[field];
+
+                    field === 'total' ? (item.price_unit * item.quantity_sell) :
+                    
+                    // field === 'products_id' ? filterProductsTag.label :
+
+                    item[field];
 
         const isEditable = actionButton.action === 'update' && 
                           actionButton.actionDataId === item.sell_product_id;
@@ -106,14 +116,15 @@ const Table = ({ data, handleOpenModal, handleUserStateChange, openConfirmation 
                         <th>Precio Unitario</th>
                         <th>Cantidad Vendida</th>
                         <th>Total</th>
-                        <th>ID Producto</th>
+                        <th>Producto</th>
                         <th>
-                            <button /* onClick={() => setActionButton({ action: 'create', actionDataId: null })} */ onClick={() => handleOpenModal(true)}>
+                            <button onClick={() => handleOpenModal(true)}>
                                 <i className="fa fa-plus" aria-hidden="true" /> 
                             </button>
                         </th>
                     </tr>
                 </thead>
+
                 <tbody>
                     {tableData && tableData?.map((item, index) => (
                         <tr
