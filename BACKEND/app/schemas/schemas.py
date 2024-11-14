@@ -35,7 +35,7 @@ class Schema_user_login(BaseModel):
 
 
 class ProductSchema(BaseModel):
-    user_id: int
+    # user_id: int
     category_of_products_id: int
     name_product: str
     description_product: Optional[str] = None

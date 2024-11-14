@@ -2,6 +2,60 @@ import { useReducer } from 'react';
 import { useLocation } from 'react-router-dom';
 import './config_user.style.scss';
 
+export const renderImgCompressed = async (file, maxWidth, maxHeight, quality) => {
+    if (file) {
+        const compressImage = (file, maxWidth, maxHeight, quality) => {
+            return new Promise((resolve, reject) => {
+                const img = document.createElement('img');
+                const reader = new FileReader();
+
+                reader.readAsDataURL(file); // Leer el archivo como Base64
+                reader.onload = (event) => {
+                    img.src = event.target.result; // Asignar la imagen resultante
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+
+                        let width = img.width;
+                        let height = img.height;
+
+                        // Mantener la proporción de aspecto
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height *= maxWidth / width;
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width *= maxHeight / height;
+                                height = maxHeight;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        // Dibujar la imagen redimensionada en el canvas
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Convertir el canvas a Base64 comprimido, usando JPEG y ajustando la calidad
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', quality); // Aquí aplicamos la calidad
+                        resolve(compressedBase64);
+                    };
+                };
+                reader.onerror = (error) => reject(error);
+            });
+        };
+
+        // Llamada a compressImage y retorno del resultado
+        return await compressImage(file, maxWidth, maxHeight, quality);
+    }
+
+    return null; // Retorno nulo si no hay archivo
+};
+
+
+
 const ConfigUser = ({ usuario, typeFunc, usuarioA, onStateChange }) => {
 
     const location = useLocation();
@@ -37,65 +91,23 @@ const ConfigUser = ({ usuario, typeFunc, usuarioA, onStateChange }) => {
     }
 
     const handleImageChange = async (e) => {
+        console.log('File input changed:', e);
         e.preventDefault();
         const file = e.target.files[0];
+        console.log(file)
      
         if (file) {
-            const compressImage = (file, maxWidth, maxHeight, quality) => {
-                return new Promise((resolve, reject) => {
-                    const img = document.createElement('img');
-                    const reader = new FileReader();
-
-                    reader.readAsDataURL(file); // Leer el archivo como Base64
-                    reader.onload = (event) => {
-                        img.src = event.target.result; // Asignar la imagen resultante
-                        img.onload = () => {
-                            const canvas = document.createElement('canvas');
-                            const ctx = canvas.getContext('2d');
-
-                            let width = img.width;
-                            let height = img.height;
-
-                            // Mantener la proporción de aspecto
-                            if (width > height) {
-                                if (width > maxWidth) {
-                                    height *= maxWidth / width;
-                                    width = maxWidth;
-                                }
-                            } else {
-                                if (height > maxHeight) {
-                                    width *= maxHeight / height;
-                                    height = maxHeight;
-                                }
-                            }
-
-                            canvas.width = width;
-                            canvas.height = height;
-
-                            // Dibujar la imagen redimensionada en el canvas
-                            ctx.drawImage(img, 0, 0, width, height);
-
-                            // Convertir el canvas a Base64 comprimido, usando JPEG y ajustando la calidad
-                            const compressedBase64 = canvas.toDataURL('image/jpeg', quality); // Aquí aplicamos la calidad
-                            resolve(compressedBase64);
-                        };
-                    };
-                    reader.onerror = (error) => reject(error);
-                });
-            };
-
             try {
                 // Comprimir la imagen antes de convertirla a Base64 (máximo 500x500 px) y reducir la calidad
-                const compressedBase64Image = await compressImage(file, 500, 500, 0.7); // Calidad 0.7 (ajustable)
-
+                const asd = await renderImgCompressed(file, 500, 500, 0.7); // Calidad 0.7 (ajustable)
+                
                 // Guardar la imagen comprimida en el estado usando dispatch
                 dispatch({
                     type: USER_ACTION_TYPES.SET_VALUE,
                     field: 'photo',
-                    payload: compressedBase64Image, // Guardar la imagen comprimida en el estado
+                    payload: asd, // Guardar la imagen comprimida en el estado
                 });
 
-                console.log('Imagen comprimida y guardada en el estado:', compressedBase64Image);
             } catch (error) {
                 console.error('Error al comprimir la imagen:', error);
             }
@@ -113,7 +125,8 @@ const ConfigUser = ({ usuario, typeFunc, usuarioA, onStateChange }) => {
                     alt="image-profile" 
                     className={`${location.pathname !== '/profile' ? '' : 'profile-image'}`}
                     style={location.pathname !== '/profile' ? { opacity: '0' } : {}}
-                                    />
+                />
+                
                 {
                     typeFunc == 'update' ?
                     <label 

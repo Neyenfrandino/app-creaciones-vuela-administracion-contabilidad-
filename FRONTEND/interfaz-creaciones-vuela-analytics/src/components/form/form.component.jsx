@@ -5,10 +5,12 @@ const Form = ({label, ...otherProps}) => {
 
     return (
         <div className='formInput__container'>
-            {label && 
-                <label htmlFor={inputId} className={`formInput__label`}>{label}</label>
-            }
-            <input {...otherProps} className={`formInput__input ${className}`} />
+            <div className='formInput__wrapper'>
+                {label && 
+                    <label htmlFor={inputId} className={`formInput__label`}>{label}</label>
+                }
+                <input {...otherProps} className={`formInput__input ${className}`} />
+            </div>
         </div>
     )
 }

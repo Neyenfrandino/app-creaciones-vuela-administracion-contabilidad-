@@ -10,7 +10,7 @@ from app.oauth import get_current_user
 
 router = APIRouter(prefix=f"/products", tags=["products"])
 
-@router.post("/create_product", status_code= status.HTTP_201_CREATED)
+@router.post("/create_product/{user_id}", status_code= status.HTTP_200_OK)
 def create_products(user_id:int, schema_product: ProductSchema, db: Session = Depends(get_db), current_user: ProductSchema = Depends(get_current_user)):
     response = create_product(user_id, schema_product, db)
     return response
@@ -25,12 +25,12 @@ def products_all(user_id:int, db: Session = Depends(get_db), current_user: Produ
     response = read_products_all(user_id, db)
     return response
 
-@router.patch("/update_product", status_code= status.HTTP_200_OK)
+@router.patch("/update_product/{user_id}/{product_id}", status_code= status.HTTP_200_OK)
 def update_products(user_id:int, product_id:int, schema_product: ProductSchema, db: Session = Depends(get_db), current_user: ProductSchema = Depends(get_current_user)):
     response = update_product(user_id, product_id, schema_product, db)
     return response
 
-@router.delete("/delete_product", status_code= status.HTTP_200_OK)
+@router.delete("/delete_product/{user_id}/{product_id}", status_code= status.HTTP_200_OK)
 def delete_products(user_id:int, product_id:int, db: Session = Depends(get_db), current_user: ProductSchema = Depends(get_current_user)):
     response = delete_product(user_id, product_id, db)
     return response

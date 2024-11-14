@@ -25,7 +25,6 @@ const GestionIntegral = ({ dataGestionStock }) => {
 
     const [modalOpen, setModalOpen] = useState(false);
 
-
     const routeData = dataGestionStock.find(item =>
         item.route === currentRoute
     );
@@ -42,37 +41,39 @@ const GestionIntegral = ({ dataGestionStock }) => {
 
     // Manejar cambios en actionFunc
     useEffect(() => {
-        if (actionFunc[currentRoute] === 'delete') {
+        if (actionFunc[currentRoute] === 'delete'  || actionFunc[currentRoute].action === 'delete') {
             setIsConfirmationOpen(true);
-        } else if (actionFunc[currentRoute] === 'get_products' && modalOpen === true) {
-            // console.log('hola mundo')
+
+        } else if (actionFunc[currentRoute] === 'get_products' && modalOpen === false) {
+            // console.log(actionFunc[currentRoute], 'hola mundo')
             setkeyQuery({ [currentRoute]: 'get_products' });
             setShouldFetchData(true);
         }
-    }, [actionFunc, currentRoute]);
+    }, [actionFunc, currentRoute, ]);
 
     const handleActionFunc = useCallback((key) => {
+        // console.log({ [currentRoute]: key }, 'hola mundo')
         setActionFunc({ [currentRoute]: key });
     }, [currentRoute]);
-
 
     const handleUserStateChange = useCallback((newState, typeFunc) => {
         setUpdatedUserData({ newState, typeFunc });
     }, []);
 
-
     const handleSaveChanges = useCallback((option) => {
         if (option === 'Si') {
-            if (actionFunc[currentRoute] === 'delete') {
+            if (actionFunc[currentRoute] === 'delete' || actionFunc[currentRoute].action === 'delete') {
+                // console.log('hola mundo')
                 setkeyQuery(actionFunc);
             } else if (updatedUserData?.typeFunc === 'update') {
+                // console.log('hollllllllaaaaa', { [currentRoute]: updatedUserData })
                 setkeyQuery({ [currentRoute]: updatedUserData });
                 setDataUser_db(prevData => ({
                     ...prevData,
                     ...updatedUserData.newState
                 }));
             } else if (updatedUserData?.typeFunc == "create") {
-
+                // console.log({ [currentRoute]: updatedUserData })
                 setkeyQuery({ [currentRoute]: updatedUserData });
             }
         }

@@ -1,0 +1,237 @@
+.container__render-list {
+    width: 99%;
+    height: 100%;
+    position: relative;
+    // border: 1px solid #fff;
+}
+
+.list__render-list{
+    width: 99%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr ;
+    align-items: center;
+    // border: 1px solid #fff;
+    margin-top: 5%;
+    list-style: none;
+    position: relative;
+    gap: 20px;
+
+    .item__render-list {
+        width: 70%;
+        display: flex;
+        flex-direction: row;
+        // justify-content: center;
+        margin: 0 auto;
+        border: 1px solid #fff;
+        background-color: #ffffff88;
+        border-radius: 10px;
+        align-items: center;
+        padding: 20px;
+        gap: 20px;
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+      
+        &-image {
+            width: 40%;
+            height: 40%;
+            object-fit: cover;
+            border-radius: 50%;
+            
+            img{
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+        }
+
+        &:hover{
+            transform: scale(1.05);
+            transition: all 0.3s ease-in-out;
+            
+        }
+
+        .item__render-list-info {
+            width: 90%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 10px;
+
+            .item__render-list-name-products {
+                font-size: 16px;
+                font-weight: bold;
+                color: #000000;
+            }
+            .item__render-list-description-products {
+                font-size: 14px;
+                width: 200px;
+                color: #000000;
+                white-space: nowrap; // Evita que el texto se ajuste a la anchura de la ventana
+                overflow: hidden; // Oculta el texto si se supera el ancho de la ventana
+                text-overflow: ellipsis; // Muestra el texto con puntos de suspensión (...) cuando se supera el ancho de la ventana
+            }
+        }
+
+        .item__render-list-button{
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            flex-direction: column;
+            gap: 5px;
+
+            button{
+                background-color: #b5b5b5;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: all 0.2s ease-in-out;
+                box-shadow: 5px 0px 10px rgba(0, 0, 0, 0.5);
+                
+                &:hover {
+                    transform: scale(0.90);
+                    background-color: #ccc;
+                    transition: all 0.2s ease-in-out;
+                }
+
+            }
+
+        }
+    
+    
+    }
+}
+
+
+.modal-content {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    // padding: 15px; // Añade padding si quieres algo de espacio interior en el contenedor principal
+    margin-top: 1%;
+    // margin-bottom: 20% !important;
+    position: relative;
+    animation: entryInput 0.3s ease-in-out;
+    
+    
+    .modal-content-item {
+        width: 100%;
+        height: auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        list-style: none;
+        border: 1px solid #fff;
+        background-color: #ffffff88;
+        // padding: 5px; // Añade padding para mejor separación dentro del item
+        transition: all 0.2s ease-in-out; // Animación de transición
+        box-shadow: 10px 0px 10px rgba(0, 0, 0, 0.7);
+        cursor: pointer;
+
+        &:hover {
+            background-color: #ffffff22;
+            transition: all 0.2s ease-in-out; // Animación de transición
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0px 0px 0px rgba(254, 254, 254, 0.0);
+
+        }
+        
+        .modal-content-item-title {
+            font-size: 14px;
+            color: #000;
+            font-weight: bold; // Agrega peso a los títulos si quieres diferenciarlos
+            flex-shrink: 0; // Evita que el título se reduzca en tamaño
+        }
+        
+        .modal-content-item-input{
+            width: 100%;
+            height: 35px;
+            border: 1px solid #fff;
+            background-color: #ffffff88;
+            border-radius: 5px;
+            padding: 5px;
+            margin: 5px;
+            position: relative;
+            // transition: all 0.3s ease-in-out;
+            animation: entryInput 0.3s ease-in-out;
+        }
+
+        .modal-content-item-value-img{
+            margin-left: 100px;
+            width: 50%;
+            height: 100%;
+            padding: 5px;
+            padding-bottom: 0;
+            // object-fit: cover;
+            flex-grow: 0; // Permite que el valor ocupe más espacio disponible
+            word-break: break-word; // Asegura que el contenido no se salga de los bordes
+
+            img{
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                // border-radius: 50%;
+            }
+        }
+
+        .modal-content-item-value- {
+            font-size: 14px;
+            color: #000;
+            flex-grow: 1; // Permite que el valor ocupe más espacio disponible
+            word-break: break-word; // Asegura que el contenido no se salga de los bordes
+            
+            p {
+                width: auto;
+                // margin: 0; // Elimina el espacio vertical en los párrafos
+                // white-space: nowrap; // Evita que el texto se ajuste a la anchura de la ventana
+                overflow: hidden; // Oculta el texto si se supera el ancho de la ventana
+                text-overflow: ellipsis; // Muestra el texto con puntos de suspensión (...) cuando se supera el ancho de la ventana
+                
+            }
+        }
+
+
+        .modal-content-item-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-right: 10px;
+            align-items: center;
+            gap: 5px;
+
+            button {
+                background-color: #b5b5b5;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: all 0.2s ease-in-out;
+                
+                &:hover {
+                    background-color: #ccc;
+                    transition: all 0.2s ease-in-out;
+                }
+            }
+        }
+    }
+}
+
+
+@keyframes entryInput {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+}
+
