@@ -1,146 +1,176 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import './table.style.scss';
 
-const Table = ({ data, handleOpenModal, handleUserStateChange, openConfirmation, filterProductsTag }) => {   
-    data = data.sell_products || [];
+const Table = ({ data, setIsNewData, currentRoute, setOpenModal, filterProductsTag }) => {
 
-    const [editingCell, setEditingCell] = useState({ rowIndex: null, field: null });
-    const [actionButton, setActionButton] = useState({ action: null, actionDataId: null });
-    const [tableData, setTableData] = useState(data);
-    const [newState, setNewState] = useState({});
-    const editableRef = useRef(null);
+  const [editingCell, setEditingCell] = useState({ rowIndex: null, field: null });
+  const [actionButton, setActionButton] = useState({ action: '', actionDataId: '' });
+  const [tableData, setTableData] = useState(data);
+  const [newState, setNewState] = useState({});
+  const editableRef = useRef(null);
 
-    useEffect(() => {
+
+  const handleStartEditing = useCallback((rowIndex, field) => {
+    setEditingCell({ rowIndex, field });
+  }, []);
+
+  const handleCellChange = useCallback((index, field) => {
+    if (editableRef.current) {
+      setTableData(prevData => {
+        const updatedData = [...prevData];
+        updatedData[index] = {
+          ...updatedData[index],
+          [field]: editableRef.current.textContent.trim(),
+        };
+        setNewState(updatedData[index]);
+        return updatedData;
+      });
+    }
+  }, []);
+
+  const handleKeyDown = useCallback((event) => {
+    if (['Enter', 'Escape'].includes(event.key)) {
+      event.preventDefault();
+      editableRef.current?.blur();
+    }
+  }, []);
+
+  const renderCell = useCallback(
+    (item, index, field) => {
+      const isEditing = editingCell.rowIndex === index && editingCell.field === field;
+  
+      // Determinar el valor basado en el campo
+      const value = (() => {
+        if (field === 'paid') {
+          return item[field] ? 'Sí' : 'No';
+        }
+        if (field === 'total') {
+          return item.price_unit * item.quantity_sell;
+        }
+        if (field === 'products_id') {
+          return filterProductsTag.find(tag => tag.value === item[field])?.label || 'Desconocido';
+        }
+        return item[field];
+      })();
+  
+      // Verificar si la celda es editable
+      const isEditable =
+        actionButton.action === 'update' && actionButton.actionDataId === item.sell_product_id;
+  
+      return (
+        <span
+          ref={isEditing ? editableRef : null}
+          className={`editable-cell ${isEditing && isEditable ? 'editing' : ''}`}
+          contentEditable={isEditable && isEditing}
+          suppressContentEditableWarning
+          onBlur={() => {
+            handleCellChange(index, field);
+            setEditingCell({ rowIndex: null, field: null });
+          }}
+          onKeyDown={handleKeyDown}
+          onClick={() => handleStartEditing(index, field)}
+        >
+          {value}
+        </span>
+      );
+    },
+    [editingCell, actionButton, handleKeyDown, handleStartEditing, handleCellChange, filterProductsTag] // Agregado `filterProductsTag` a las dependencias
+  );
+  
+  useEffect(() => {
+    const { action } = actionButton;
+    switch (action) {
+      case 'delete':
+        setIsNewData({
+          [currentRoute]: null,
+          action: 'delete'
+        })
+        break;
+      case 'save':
+        if(newState){
+            setIsNewData({
+              [currentRoute]: newState,
+              action: 'update'
+            })
+        }
+        break;
+      case 'cancelar':
+        setActionButton({ action: '', actionDataId: '' });
         setTableData(data);
-    }, [data]);
+        break;
+      default:
+        setIsNewData({
+          [currentRoute]: null,
+          action: 'get'
+        })
+      
+    }
+  }, [actionButton, ]);
 
-    const handleStartEditing = useCallback((rowIndex, field) => {
-        setEditingCell({ rowIndex, field });
-    }, []);
-
-    const handleCellChange = useCallback((index, field) => {
-        if (editableRef.current) {
-            setTableData(prevData => {
-                const updatedData = [...prevData];
-                updatedData[index] = {
-                    ...updatedData[index],
-                    [field]: editableRef.current.textContent,
-                };
-                setNewState(updatedData[index]);
-                return updatedData;
-            });
-        }
-    }, []);
-
-    const handleKeyDown = useCallback((event) => {
-        if (['Enter', 'Escape'].includes(event.key)) {
-            event.preventDefault();
-            editableRef.current?.blur();
-        }
-    }, []);
-
-
-    const renderCell = useCallback((item, index, field) => {
-        // console.log( item.products_id)
-        const isEditing = editingCell.rowIndex === index && editingCell.field === field;
-
-        const product = filterProductsTag.find(iteem => iteem.value == item.products_id);
-        
-        const value = field === 'paid' ? (item[field] ? 'Sí' : 'No') :
-                      field === 'total' ? (item.price_unit * item.quantity_sell) :
-                      field ===  'products_id' ? product && product.label :
-                      item[field];
-
-        const isEditable = actionButton.action === 'update' && actionButton.actionDataId === item.sell_product_id;
-
-        return (
-            <span
-                ref={isEditing ? editableRef : null}
-                className={`editable-cell ${isEditing && isEditable ? 'editing' : ''}`}
-                contentEditable={isEditable && isEditing}
-                suppressContentEditableWarning
-                onBlur={() => {
-                    handleCellChange(index, field);
-                    setEditingCell({ rowIndex: null, field: null });
-                }}
-                onKeyDown={handleKeyDown}
-                onClick={() => handleStartEditing(index, field)}
+  return (
+    <div className="table-container">
+      <table className="styled-table">
+        <thead>
+          <tr>
+            <th>Fecha de Venta</th>
+            <th>Pagado</th>
+            <th>Método de Pago</th>
+            <th>Precio Unitario</th>
+            <th>Cantidad Vendida</th>
+            <th>Total</th>
+            <th>Producto</th>
+            <th>
+              <button onClick={() => setOpenModal(true)}>
+                <i className="fa fa-plus" aria-hidden="true" />
+              </button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {tableData.map((item, index) => (
+            <tr
+              key={item.sell_product_id || `row-${index}`}
+              className={
+                actionButton.action === 'update' &&
+                actionButton.actionDataId === item.sell_product_id
+                  ? 'data-selected'
+                  : ''
+              }
             >
-                {value}
-            </span>
-        );
-    }, [editingCell, actionButton, handleKeyDown, handleStartEditing, handleCellChange, filterProductsTag]);
+              {['date_sell', 'paid', 'payment_method', 'price_unit', 'quantity_sell', 'total', 'products_id'].map(
+                field => (
+                  <td key={field}>{renderCell(item, index, field)}</td>
+                )
+              )}
+              <td>
+                {actionButton.action === 'update' &&
+                actionButton.actionDataId === item.sell_product_id ? (
+                  <>
+                    <button onClick={() => setActionButton({ action: 'save', actionDataId: item.sell_product_id })}>
+                      <i className="fas fa-save" aria-hidden="true" />
+                    </button>
 
-    const handleOnclickSubmit = useCallback((event) => {
-        const action = event.currentTarget.getAttribute('action');
-
-        if (action === 'save') {
-            handleUserStateChange(newState, 'update');
-            openConfirmation();
-            setActionButton({ action: null, actionDataId: null });
-        }
-
-        if (action === 'cancelar') {
-            setActionButton({ action: null, actionDataId: null });
-            setTableData(data);
-        }
-    }, [newState, handleUserStateChange, openConfirmation, data]);
-
-    return (
-        <div className="table-container">
-            <table className="styled-table">
-                <thead>
-                    <tr>
-                        <th>Fecha de Venta</th>
-                        <th>Pagado</th>
-                        <th>Método de Pago</th>
-                        <th>Precio Unitario</th>
-                        <th>Cantidad Vendida</th>
-                        <th>Total</th>
-                        <th>Producto</th>
-                        <th>
-                            <button onClick={() => handleOpenModal(true)}>
-                                <i className="fa fa-plus" aria-hidden="true" /> 
-                            </button>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {tableData.map((item, index) => (
-                        <tr
-                            key={item.sell_product_id || index}
-                            className={actionButton.action === 'update' && actionButton.actionDataId === item.sell_product_id ? 'data-selected' : ''}
-                        >
-                            {['date_sell', 'paid', 'payment_method', 'price_unit', 'quantity_sell', 'total', 'products_id'].map(field => (
-                                <td key={field}>{renderCell(item, index, field)}</td>
-                            ))}
-                            <td>
-                                {actionButton.action === 'update' && actionButton.actionDataId === item.sell_product_id ? (
-                                    <>
-                                        <button onClick={handleOnclickSubmit} action="save">
-                                            <i className="fas fa-save" aria-hidden="true" />
-                                        </button>
-                                        <button onClick={handleOnclickSubmit} action="cancelar">
-                                            <i className="fas fa-times" aria-hidden="true" />
-                                        </button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <button onClick={() => setActionButton({ action: 'update', actionDataId: item.sell_product_id })}>
-                                            <i className="fa fa-pencil" aria-hidden="true" />
-                                        </button>
-                                        <button onClick={() => setActionButton({ action: 'delete', actionDataId: item.sell_product_id })}>
-                                            <i className="fa fa-trash" aria-hidden="true" />
-                                        </button>
-                                    </>
-                                )}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    );
+                    <button onClick={() => setActionButton({ action: 'cancelar', actionDataId: item.sell_product_id })}>
+                      <i className="fas fa-times" aria-hidden="true" />
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={() => setActionButton({ action: 'update', actionDataId: item.sell_product_id })}>
+                      <i className="fa fa-pencil" aria-hidden="true" />
+                    </button>
+                    <button onClick={() => setActionButton({ action: 'delete', actionDataId: item.sell_product_id })}>
+                      <i className="fa fa-trash" aria-hidden="true" />
+                    </button>
+                  </>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 };
 
 export default Table;

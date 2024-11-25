@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useCallback } from 'react';
+import { useContext, useEffect, useState, useCallback, useReducer } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { ContextQuery } from '../../context/contexts_query/contexts_query.jsx';
 
@@ -9,83 +9,112 @@ import RenderUser from '../render_pages_component/render_user/render_user.compon
 
 import './gestion_integral.style.scss';
 
-const GestionIntegral = ({ dataGestionStock }) => {
+const INITIAL_STATE = {
+    isDataCurrentRoute: {},
+    isNewData: {},
+    isLoading: false
+}
 
+const actionTypes = {
+    SET_DATA_CURRENT_ROUTE: 'SET_DATA_CURRENT_ROUTE',
+    SET_DATA_SECUNDARY_ROUTE: 'SET_DATA_SECUNDARY_ROUTE',
+    SET_NEW_DATA: 'SET_NEW_DATA',
+    SET_LOADING: 'SET_LOADING'
+}
+
+const reducer = (state, action) => {
+    switch (action.type) {
+        case actionTypes.SET_DATA_CURRENT_ROUTE:
+            return { ...state, isDataCurrentRoute: action.payload };
+        case actionTypes.SET_NEW_DATA:
+            return { ...state, isNewData: action.payload };
+        case actionTypes.SET_LOADING:
+            return { ...state, isLoading: action.payload };
+        default:
+            return state;
+    }
+}
+
+
+const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
+    
     const { route } = useParams();
     const location = useLocation();
     const currentPath = location.pathname;
     const currentRoute = route || currentPath.split('/')[1];
 
-    const { setkeyQuery, dataUser_db, setDataUser_db } = useContext(ContextQuery);
-
-    const [actionFunc, setActionFunc] = useState({ [currentRoute]: 'get' });
-    const [updatedUserData, setUpdatedUserData] = useState(null);
-    const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-    const [shouldFetchData, setShouldFetchData] = useState(true);
-
-    const [modalOpen, setModalOpen] = useState(false);
-
-    const routeData = dataGestionStock.find(item =>
-        item.route === currentRoute
-    );
+    const { setkeyQuery, dataUser_db, setDataUser_db, sell_products, products, user } = useContext(ContextQuery);
+    
+    const routeData = dataGestionStock.find(item => item.route === currentRoute);
 
     const { section, actions } = routeData || { section: {}, actions: [] };
 
-    // Separar el efecto de obtención inicial de datos
+    const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+
+    const { isDataCurrentRoute, isNewData, isLoading } = state;
+
+    const setIsDataCurrentRoute = (data) => {
+        dispatch({ type: actionTypes.SET_DATA_CURRENT_ROUTE, payload: data });
+    }
+
+    const setIsNewData = (data) => {
+        dispatch({ type: actionTypes.SET_NEW_DATA, payload: data });
+    }
+
+    const setIsLoading = (data) => {
+        dispatch({ type: actionTypes.SET_LOADING, payload: data });
+    }   
+
+
+    // useEffect(() => {
+    //     if (dataUrls?.action === 'get') {
+    //         setkeyQuery(dataUrls);
+    //     }
+
+    //     if(currentRoute === 'sell-products' && dataUrls?.action === 'get' && sell_products){
+    //         console.log('sell-products')
+    //         setkeyQuery({'products': null, 'action': 'get'})
+    //     }
+
+    //     if(isNewData.action == 'update' || isDataCurrentRoute.action === 'update' || isNewData.action === 'delete' || isDataCurrentRoute.action === 'create'){
+    //         setkeyQuery({[currentRoute]: null, 'action': 'get'})
+    //     }
+
+    // }, [dataUrls, currentRoute, sell_products, isNewData, ]);
+
+
     useEffect(() => {
-        if (shouldFetchData && modalOpen === false) {
-            setkeyQuery({ [currentRoute]: 'get' });
-            setShouldFetchData(false);
+        if(!products && sell_products){
+            setkeyQuery(isDataCurrentRoute)
         }
-    }, [currentRoute, setkeyQuery, shouldFetchData, modalOpen, ]);
+    }, [setIsDataCurrentRoute, isDataCurrentRoute, products, ]);
+    
+    
 
-    // Manejar cambios en actionFunc
-    useEffect(() => {
-        if (actionFunc[currentRoute] === 'delete'  || actionFunc[currentRoute].action === 'delete') {
-            setIsConfirmationOpen(true);
-
-        } else if (actionFunc[currentRoute] === 'get_products' && modalOpen === false) {
-            // console.log(actionFunc[currentRoute], 'hola mundo')
-            setkeyQuery({ [currentRoute]: 'get_products' });
-            setShouldFetchData(true);
+    const handleSaveChanges = (data) => {
+        // Validar que data sea "Si" para proceder
+        if (data !== 'Si') {
+            console.log('Operación cancelada.');
+            setIsNewData('');
+            return;
         }
-    }, [actionFunc, currentRoute, ]);
-
-    const handleActionFunc = useCallback((key) => {
-        // console.log({ [currentRoute]: key }, 'hola mundo')
-        setActionFunc({ [currentRoute]: key });
-    }, [currentRoute]);
-
-    const handleUserStateChange = useCallback((newState, typeFunc) => {
-        setUpdatedUserData({ newState, typeFunc });
-    }, []);
-
-    const handleSaveChanges = useCallback((option) => {
-        if (option === 'Si') {
-            if (actionFunc[currentRoute] === 'delete' || actionFunc[currentRoute].action === 'delete') {
-                // console.log('hola mundo')
-                setkeyQuery(actionFunc);
-            } else if (updatedUserData?.typeFunc === 'update') {
-                // console.log('hollllllllaaaaa', { [currentRoute]: updatedUserData })
-                setkeyQuery({ [currentRoute]: updatedUserData });
-                setDataUser_db(prevData => ({
-                    ...prevData,
-                    ...updatedUserData.newState
-                }));
-            } else if (updatedUserData?.typeFunc == "create") {
-                // console.log({ [currentRoute]: updatedUserData })
-                setkeyQuery({ [currentRoute]: updatedUserData });
-            }
+    
+        // Obtener la acción desde isNewData o isDataCurrentRoute
+        const action = isNewData?.action || isDataCurrentRoute?.action;
+    
+        if (['update', 'create', 'delete'].includes(action)) {
+            console.log(`${action} en proceso...`);
+            // Ejecutar lógica común para todas las acciones
+            setkeyQuery(isNewData);
+            
+            setIsNewData('');
+        } else {
+            console.warn('Acción desconocida. No se realizará ninguna operación.');
+            setIsNewData('');
         }
+    };
+    
 
-        setIsConfirmationOpen(false);
-        setActionFunc({ [currentRoute]: 'get' });
-        setShouldFetchData(true);
-    }, [actionFunc, currentRoute, updatedUserData, setkeyQuery, setDataUser_db]);
-
-    const openConfirmation = useCallback(() => {
-        setIsConfirmationOpen(true);
-    }, []);
 
     return ( 
         <div className="gestion_stock__container">
@@ -96,35 +125,35 @@ const GestionIntegral = ({ dataGestionStock }) => {
                 </header>
 
                 <RenderInventario
-                    currentPath={currentPath}
-                    dataUser_db={dataUser_db}
-                    openConfirmation={openConfirmation}
-                    handleUserStateChange={handleUserStateChange}
-                    handleActionFunc={handleActionFunc}
-                    setModalOpen={setModalOpen}
-                    modalOpen={modalOpen}
+                    setIsDataCurrentRoute={setIsDataCurrentRoute}
+                    currentRoute={currentRoute}
+                    products={products ? products.products : null}
+                    sell_product={sell_products? sell_products : null}
+                    setIsNewData={setIsNewData}
                 />
 
 
                 <RenderUser
-                    currentPath={currentPath}
+                    currentRoute={currentRoute}
                     dataUser_db={dataUser_db}
-                    openConfirmation={openConfirmation}
-                    handleUserStateChange={handleUserStateChange}
-                    actionFunc={actionFunc[currentRoute]}
-                    dataFunc={actions}
-                    handleActionFunc={handleActionFunc}
+                    setIsNewData={setIsNewData}
+                    actionTypes={actions}
                 />
 
             </div>
 
-            {isConfirmationOpen && (
-                <div className='gestion_stock__container--check'>
-                    <CheckUpdateAction handleOnClick={handleSaveChanges} />
-                </div>
-            )}
+            {
+                isNewData.action && isNewData.action !== 'get' || isDataCurrentRoute.action !== 'get' && isDataCurrentRoute.action ? (
+                    <div className='gestion_stock__container--check'>
+                        <CheckUpdateAction handleOnClick={handleSaveChanges} />
+                    </div>
+                ): null
+            }
         </div>
     );
-};
+
+}
 
 export default GestionIntegral;
+
+

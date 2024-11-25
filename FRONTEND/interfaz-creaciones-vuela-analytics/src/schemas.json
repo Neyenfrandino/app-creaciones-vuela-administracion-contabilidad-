@@ -1,6 +1,6 @@
 {
     "sell_product": {
-        "products_id": ["Producto", "required", "text", "get_products"],
+        "products_id": ["Producto", "required", "text", "products-get"],
         "date_sell": ["Fecha de venta", "required", "date"],
         "quantity_sell": ["Cantidad de productos", "required", "number"],
         "price_unit": ["Precio unitario", "required", "number"],

@@ -16,7 +16,7 @@ import {
 
 import './bento.style.scss'
 
-const Bento = ({data}) => {
+const Bento = ({data, setDataMainPage}) => {
     const iconMapping = {
         faUsers: faUsers,
         faBoxes: faBoxes,
@@ -37,6 +37,7 @@ const Bento = ({data}) => {
                     to={`${item.route}`} // Asegúrate de que este sea el path correcto
                     key={index} 
                     className={`bento-item`}
+                    onClick={() => setDataMainPage(item.route)}
                 >
                     <div className='bento-item-content'>
                         <span className='icon'><FontAwesomeIcon icon={iconMapping[item.section.icon]} /></span>

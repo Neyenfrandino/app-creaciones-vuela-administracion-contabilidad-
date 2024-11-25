@@ -14,7 +14,7 @@ def create_category_of_products(user_id:int, schema_category_of_products: Catego
     response = create_category(user_id, schema_category_of_products, db)
     return response
 
-@router.get("/get_all_category_of_products", status_code= status.HTTP_200_OK)
+@router.get("/get_all_category_of_products/{user_id}", status_code= status.HTTP_200_OK)
 def get_all_category_of_products(user_id:int, db: Session = Depends(get_db), current_user: CategoryOfProductSchema = Depends(get_current_user)):
     response = get_category_all(user_id, db)
     return response 

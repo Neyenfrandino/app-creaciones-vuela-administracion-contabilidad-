@@ -21,7 +21,7 @@ def get_all_sell_products(user_id:int, db: Session = Depends(get_db), current_us
     response = get_sell_products_all(user_id, db)
     return response
 
-@router.patch("/update_sell_product/{user_id}", status_code= status.HTTP_200_OK)
+@router.patch("/update_sell_product/{user_id}/{sell_product_id}", status_code= status.HTTP_200_OK)
 def update_sell_products(user_id:int, sell_product_id:int, schema_sell_product: SellProductSchema, db: Session = Depends(get_db), current_user: SellProductSchema = Depends(get_current_user)):
     response = update_sell_product(user_id, sell_product_id, schema_sell_product, db)
     return response

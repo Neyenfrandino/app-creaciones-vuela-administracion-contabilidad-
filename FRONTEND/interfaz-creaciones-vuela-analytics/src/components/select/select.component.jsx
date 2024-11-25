@@ -1,14 +1,7 @@
 import { useEffect } from "react";
 
 import './select.style.scss';
-const Select = ({value, handleActionFunc, options, handleSelectValue, item, className }) => {
-
-
-    useEffect(() => {
-        if (value === 'get_products') {
-            handleActionFunc(value);
-        }
-    },[value, handleActionFunc])
+const Select = ({ options, handleSelectValue, item, className }) => {
 
     if(!options) return null;
     

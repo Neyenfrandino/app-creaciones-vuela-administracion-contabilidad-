@@ -13,33 +13,24 @@ import schemas from '../../../schemas.json';
 
 import './render_inventario.styles.scss';
 
-const RenderInventario = ({ 
-    currentPath, 
-    dataUser_db, 
-    openConfirmation, 
-    handleUserStateChange, 
-    handleActionFunc, 
-    setModalOpen, 
-    modalOpen 
-}) => {
-    
-    useEffect(() => {
-        if (schemas.sell_product.products_id[3] === 'get_products') {
-            handleActionFunc(schemas.sell_product.products_id[3]);
+const RenderInventario = ({ currentRoute, sell_product, products, setIsNewData, setIsDataCurrentRoute  }) => {
+    console.log(products, 'soy product de products')
+    const [openModal, setOpenModal] = useState(false);
+
+    const [filteredData, setFilteredData] = useState([]);
+
+    useEffect(() => { 
+        if(!products) {
+            setIsDataCurrentRoute({'products': null, 'action': 'get'})
         }
     }, []);
-    
-    
-    const cachedData = sessionStorage.getItem(`sell-products-get_products`);
-    const cachedProductsParsed = cachedData ? JSON.parse(cachedData) : null;
-    const [filteredData, setFilteredData] = useState([]);
-  
 
-    const filterProductsTag = cachedProductsParsed?.products?.map(item => ({
+    const filterProductsTag = products?.map(item => ({
         key: 'products_id',
         value: item.products_id,
         label: item.name_product
-    })) || [];
+      })) || [];
+
 
     const filterDataSell = [
         { key: 'paid', value: true, label: 'Sí' },
@@ -73,50 +64,47 @@ const RenderInventario = ({
 
 
     const handleSearch = (e, dataList) => {
-        // console.log(e.target.value, 'hola mundo')
-        // console.log(dataList, 'hola mundo')
+
         const filteredData = dataList.filter((item) => {
             return item.name_product.toLowerCase().includes(e.target.value.toLowerCase());
         });
-        // console.log(filteredData, 'hola mundo')
+
         setFilteredData(filteredData);
     }
 
     const handleOpenModal = useCallback((open) => {
-        setModalOpen(open);
-    }, [setModalOpen]);
+        setOpenModal(open);
+    }, [setOpenModal]);
 
     return (
+        
         <div>
-            {currentPath === '/inventario/sell-products' && (dataUser_db?.sell_products || dataUser_db?.products) ? (
+            {currentRoute === 'sell-products' && sell_product ? (
                 <>
                     <Table 
-                        data={dataUser_db} 
-                        handleOpenModal={handleOpenModal} 
-                        handleUserStateChange={handleUserStateChange} 
-                        openConfirmation={openConfirmation} 
+                        data={sell_product && sell_product.sell_products}
+                        setIsNewData={setIsNewData}
+                        currentRoute={currentRoute}
+                        setOpenModal={setOpenModal}
                         filterProductsTag={filterProductsTag}
                     />
-                  
-
                 </>
 
             ) : null}
  
             {
-                currentPath === '/inventario/products' && (dataUser_db?.products) ? 
+                currentRoute === 'products' && products ?
                     <>
                         <div className='products__search'>
-                            <Search handleSearch={(e)=>handleSearch(e, dataUser_db.products)} />
+                            <Search handleSearch={(e)=>handleSearch(e, products)} />
                             <button onClick={handleOpenModal}>Nuevo producto</button>
                         </div>
 
                         <RenderList 
-                            list={filteredData.length > 0 ? filteredData : dataUser_db.products}
+                            list={filteredData.length > 0 ? filteredData : products}
                             schemas={schemas.products} 
-                            openConfirmation={openConfirmation} 
-                            handleStateCreated={handleUserStateChange}  
-                            handleActionFunc={handleActionFunc}
+                            setIsNewData={setIsNewData}
+                            currentRoute={currentRoute}
                         />
                         
                     </> : null
@@ -124,22 +112,21 @@ const RenderInventario = ({
 
 
             <Modal 
-                show={modalOpen} 
+                show={openModal}
                 handleClose={() => {
-                    setModalOpen(false); 
-                    handleActionFunc('');
+                    setOpenModal(false); 
+                    // handleActionFunc('');
                 }} 
-                title={currentPath === '/inventario/products' ? 'New Product' : 'Ne sell product'}
+                title={currentRoute === 'products' ? 'New Product' : 'New sell product'} 
             >
                 <HandleCreated 
-                    valueVarObject={currentPath === '/inventario/products' ? schemas.products : schemas.sell_product} 
-                    openConfirmation={openConfirmation} 
-                    handleStateCreated={handleUserStateChange} 
-                    handleClose={() => setModalOpen(false)}
-                    handleActionFunc={handleActionFunc}
-                    filterData={currentPath === '/inventario/products' ? selectCategoryProducts : filterData}
+                    valueVarObject={currentRoute === 'products' ? schemas.products : schemas.sell_product }  
+                    setIsNewData={setIsNewData}
+                    handleClose={() => setOpenModal(false)}
+                    currentRoute={currentRoute}
+                    filterData={currentRoute === 'products' ? selectCategoryProducts : filterData }
                 />
-            </Modal>
+            </Modal> 
         </div>
     );
 }

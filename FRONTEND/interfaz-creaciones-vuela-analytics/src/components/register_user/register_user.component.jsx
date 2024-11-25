@@ -28,12 +28,13 @@ const RegisterUser = () => {
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
-        // formFields['register-user'] = true;
-        let newValueUser = { profile: 'create', newUser: { ...formFields } };
-        console.log(newValueUser, 'newValueUser');
+        const newValueUser = {
+            'profile' : {...formFields},
+            action: 'create'
+        }
 
         if (formFields.password === formFields.confirmPassword && formFields.password.length >= 6 && formFields.email !== '') {
-            setkeyQuery(newValueUser);
+            setkeyQuery( newValueUser );
             setFormFields(defaultFormFields);
             // console.log(formFields);
         }else{

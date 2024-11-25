@@ -20,6 +20,7 @@ const get_user = async (user_data) => {
         };
     } catch (error) {
         console.error('Error en la solicitud de usuario:', error);
+        
         return {
             status: 'error',
             data: null

@@ -11,6 +11,7 @@ import delete_user from '../../utlis/user/delete_user';
 // sell-products
 import get_ventas from '../../utlis/ventas/ventas';
 import create_sell_product from '../../utlis/ventas/create_sell';
+import update_sell_product from '../../utlis/ventas/update_sell';
 
 // products
 import get_products from '../../utlis/products/get_products';
@@ -18,17 +19,22 @@ import update_products from '../../utlis/products/update_products';
 import delete_products from '../../utlis/products/delete_products';
 import create_products from '../../utlis/products/create_products';
 
+// category
+import get_category from '../../utlis/category/get_category';
+
 const INITIAL_STATE = {
   keyQuery: {},
   dataUser_db: '',
   keys: '',
-  values: ''
+  values: '',
+  statusQuery: false
 };
 
 const actionTypes = {
   SET_KEY_QUERY: 'SET_KEY_QUERY',
   SET_USER_DATA: 'SET_USER_DATA',
-  CLEAR_DATA: 'CLEAR_DATA'
+  CLEAR_DATA: 'CLEAR_DATA',
+  SET_STATUS_QUERY: 'SET_STATUS_QUERY'
 };
 
 
@@ -39,15 +45,40 @@ const reducer = (state, action) => {
         ...state,
         keyQuery: action.payload,
         keys: Object.keys(action.payload)[0],
-        values: Object.values(action.payload)[0]
+        values: Object.values(action.payload)[0],
+        action: action.payload['action']
       };
     case actionTypes.SET_USER_DATA:
+      switch(state['keys']){
+        case 'products' :
+          return{
+            ...state,
+            'products': action.payload
+          }
+        case 'sell-products':
+          return{
+            ...state,
+            'sell_products': action.payload
+          }
+        case 'profile':
+          return{
+            ...state,
+            'profile': action.payload
+          }
+      }
       return {
         ...state,
         dataUser_db: action.payload
+        
       };
     case actionTypes.CLEAR_DATA:
       return INITIAL_STATE;
+
+    case actionTypes.SET_STATUS_QUERY:
+      return {
+        ...state,
+        statusQuery: action.payload
+      };
     default:
       return state;
   }
@@ -56,11 +87,14 @@ const reducer = (state, action) => {
 export const ContextQuery = createContext(INITIAL_STATE);
 
 export const ContextQueryProvider = ({ children }) => {
+
   const navigate = useNavigate();
   const { user_true, setUserTrue } = useContext(ContextLogin);
+
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
 
-  const { keys, values, dataUser_db, keyQuery } = state;
+  const { keys, values, action, dataUser_db, keyQuery, statusQuery, sell_products, user, products } = state;
+
 
   const handleError = (error, message) => {
     console.error(message, error);
@@ -71,6 +105,7 @@ export const ContextQueryProvider = ({ children }) => {
     sessionStorage.setItem(key, JSON.stringify(value));
   };
 
+
   const actions = {
     setkeyQuery: (newQuery) => {
       dispatch({ type: actionTypes.SET_KEY_QUERY, payload: newQuery });
@@ -80,19 +115,25 @@ export const ContextQueryProvider = ({ children }) => {
     },
     clearData: () => {
       dispatch({ type: actionTypes.CLEAR_DATA });
+    },
+    setStatusQuery: (status) => {
+      dispatch({ type: actionTypes.SET_STATUS_QUERY, payload: status });
     }
   };
-  
-  // Load cached data
+
+  const access_true = keys === 'sell-products' && values === null && action === 'get';
+
+ // Load cached data
   useEffect(() => {
-    if (user_true && keys && values) {
-      console.log('cargando datos de la sesion')
-      const cachedData = sessionStorage.getItem(`${keys}-${values}`);
+    if (user_true && keys && action) {
+      console.log('cargando datos de la sesion', `${keys}-${action}`)
+      // console.log('cargando datos de la sesion')
+      const cachedData = sessionStorage.getItem(`${keys}-${action}`);
       if (cachedData) {
         actions.setDataUser_db(JSON.parse(cachedData));
       }
     }
-  }, [user_true, state.keys, state.values]);
+  }, [user_true, state.keys]);
 
 
   // Handle user creation
@@ -100,18 +141,25 @@ export const ContextQueryProvider = ({ children }) => {
 
     if (
       keys === 'profile' &&
-      values === 'create' &&
-      keyQuery.newUser?.password &&
-      keyQuery.newUser?.confirmPassword &&
-      keyQuery.newUser?.email
+      values !== null &&
+      action === 'create'&&
+      values['password'] &&
+      values['confirmPassword'] &&
+      values['email']
     ) {
       console.log('creando usuario')
-      const { newUser: { confirmPassword, profile, ...userData } } = keyQuery;
-      
+      const { confirmPassword, profile, ...userData } = values;
+    
       const createNewUser = async () => {
         try {
           const response = await create_user(userData);
-          if (response) navigate('/login');
+          if(response && response.status === 201){
+            actions.setStatusQuery(true);
+            navigate('/login');
+            return
+          }else{
+            actions.setStatusQuery('error');
+          }
         } catch (error) {
           handleError(error, 'Error creating user:');
         }
@@ -119,18 +167,19 @@ export const ContextQueryProvider = ({ children }) => {
 
       createNewUser();
     }
-  }, [state.keyQuery, navigate]);
+  }, [state.keyQuery, ]);
 
-
-  // Handle user data fetching
+ 
+  // Handle user data fetching get user
   useEffect(() => {
-    const shouldFetchUser = keys === 'profile' && 
-      values === 'get' && 
+    if ( 
+      keys === 'profile' && 
+      values == null && 
+      action === 'get' && 
       !dataUser_db && 
       user_true && 
-      !sessionStorage.getItem('profile-get');
+      !sessionStorage.getItem('profile-get')) {
 
-    if (shouldFetchUser) {
       console.log('fetching user data get user')
 
       const fetchUserData = async () => {
@@ -142,10 +191,11 @@ export const ContextQueryProvider = ({ children }) => {
           };
 
           const response = await get_user(userData);
+
           if (response.status === 200) {
-            const userDataResponse = { userData: response.data };
-            actions.setDataUser_db(userDataResponse);
-            saveToSession('profile-get', userDataResponse);
+
+            actions.setDataUser_db(response.data);
+            saveToSession('profile-get', response.data);
           }
         } catch (error) {
           handleError(error, 'Error fetching user:');
@@ -157,19 +207,21 @@ export const ContextQueryProvider = ({ children }) => {
     }
   }, [state.keyQuery, state.dataUser_db, user_true, ]);
 
+
   // Handle user update
   useEffect(() => {
-    if (values?.typeFunc === 'update' && keys === 'profile' && user_true) {
+    if (keys === 'profile' && values !== null && action === 'update' && user_true) {
       console.log('update user data')
+
       const updateUserData = async () => {
         try {
-          const response = await update_user(values.newState, user_true);
+          const response = await update_user(values, user_true);
           if (response) {
-            const updatedData = {
-              userData: { ...dataUser_db, ...values.newState }
-            };
-            actions.setDataUser_db(updatedData);
-            saveToSession('profile-get', updatedData);
+            // const updatedData = {
+            //   userData: { ...dataUser_db, ...values }
+            // };
+            actions.setDataUser_db(values);
+            saveToSession('profile-get', values);
           }
         } catch (error) {
           handleError(error, 'Error updating user:');
@@ -182,36 +234,38 @@ export const ContextQueryProvider = ({ children }) => {
 
   // Handle user deletion
   useEffect(() => {
-    if (values === 'delete' && user_true) {
+    if (keys == 'profile' && action === 'delete' && user_true) {
       console.log('delete user data')
-      const deleteUserData = async () => {
-        try {
-          const response = await delete_user(user_true);
-          if (response) {
-            actions.setDataUser_db(null);
-            sessionStorage.removeItem('profile-get');
-            setUserTrue(null);
-          }
-        } catch (error) {
-          handleError(error, 'Error deleting user:');
-        }
-      };
+      // const deleteUserData = async () => {
+      //   try {
+      //     const response = await delete_user(user_true);
+      //     if (response) {
+      //       actions.setDataUser_db(null);
+      //       sessionStorage.removeItem('profile-get');
+      //       setUserTrue(null);
+      //     }
+      //   } catch (error) {
+      //     handleError(error, 'Error deleting user:');
+      //   }
+      // };
 
-      deleteUserData();
+      // deleteUserData();
     }
   }, [state.keyQuery, user_true, setUserTrue]);
 
+
+
   // Handle sales data fetching sell-products
-  useEffect(() => {
-    if (keys === 'sell-products' && values === 'get' && user_true && !sessionStorage.getItem(`${keys}-${values}`)) {
+  useEffect(() => {    
+    if (keys === 'sell-products' && values === null && action === 'get' && user_true && !sessionStorage.getItem(`${keys}-${action}`)) {
       console.log('fetching sales data get sell-products')
      
       const fetchSalesData = async () => {
         try {
           const response = await get_ventas(user_true);
-          const salesData = { sell_products: response };
+          const salesData = { sell_products: response};
           actions.setDataUser_db(salesData);
-          saveToSession(`${keys}-${values}`, salesData);
+          saveToSession(`${keys}-${action}`, salesData);
         } catch (error) {
           handleError(error, 'Error fetching sales:');
         }
@@ -219,59 +273,78 @@ export const ContextQueryProvider = ({ children }) => {
 
       fetchSalesData();
     }
-  }, [state.keyQuery, user_true, ]);
+  }, [state.keyQuery, user_true, state.action, state.values]);
+
+  // Handle sales data update sell-products
+  useEffect(() => {
+    if(keys === 'sell-products' && values && action === 'update' && user_true) {
+      console.log('fetching sales data update sell-products')
+
+      const fechtData = async () => {
+        try {
+          const data = await update_sell_product(user_true, values);
+    
+          if(data.status === 200) {
+            console.log('sell-products updated')
+            actions.setStatusQuery({status: true, message: 'sell-products updated'});
+          }
+        }catch(error) {
+          actions.setStatusQuery({status: false, message: error.message});
+        }
+      }
+      fechtData();
+    }
+  }, [state.keyQuery, user_true, state.keys, state.values, ]);
+
 
   // Handle sell-product creation
-  useEffect(() => {
-    if ( keys === "sell-products" && values.typeFunc === 'create' && keyQuery ) {
-      console.log('create sell-product')
-      const newData = {
-        user_id : user_true.user_id,
-        ...values.newState
-      }
+  // useEffect(() => {
+  //   if ( keys === "sell-products" && values.typeFunc === 'create' && keyQuery ) {
+  //     console.log('create sell-product')
+  //     const newData = {
+  //       user_id : user_true.user_id,
+  //       ...values.newState
+  //     }
       
-      const fetchData = async () => {
-        try {
-          const response = await create_sell_product(user_true, newData);
-          if(response === 'error'){
-            console.log('estoy en error')
-            return;
-          }
+  //     const fetchData = async () => {
+  //       try {
+  //         const response = await create_sell_product(user_true, newData);
+  //         if(response === 'error'){
+  //           console.log('estoy en error')
+  //           return;
+  //         }
 
-          if (response.message == 'SellProduct created successfully') {
-            sessionStorage.removeItem(`sell-products-get`);
-          }
-        } catch (error) {
-          handleError(error, 'Error creating sell-product:');
-        }
-      };
+  //         if (response.message == 'SellProduct created successfully') {
+  //           sessionStorage.removeItem(`sell-products-get`);
+  //         }
+  //       } catch (error) {
+  //         handleError(error, 'Error creating sell-product:');
+  //       }
+  //     };
 
-      fetchData();
-    }
-  }, [state.keyQuery, user_true]);
+  //     fetchData();
+  //   }
+  // }, [state.keyQuery, user_true]);
 
 
   // Handle products
   // get products
   useEffect(() => {
-    // console.log(keys, values)
-    if (user_true && 
-        state.keyQuery['sell-products'] === 'get_products' || 
-        keys === 'products' && 
-        values === 'get' && 
-        !sessionStorage.getItem(`${keys}-${values}`)
-      ) {
+    // products products-get
+    if ((keys === 'products' && values == null && action === 'get' && !sessionStorage.getItem(`${keys}-${action}`))) {
+
         console.log('fetching products get products')
-        console.log(`${keys}-${values}`)
       // const cachedData = sessionStorage.getItem(`${keys}-${values}`);
       const fetchData = async () => {
+
         try {
+
           const data = await get_products(user_true);
           const salesData = {products: data };
+
           actions.setDataUser_db(salesData);
-          saveToSession(`${keys}-${values}`, salesData);
-          
- 
+          saveToSession(`products-get`, salesData);
+
         } catch (error) {
           handleError(error, 'Error getting products:');
         }
@@ -280,15 +353,15 @@ export const ContextQueryProvider = ({ children }) => {
       fetchData();
     }
   }, [state.keyQuery, user_true, state.keys, state.values]);
-
+ 
   // update products
   useEffect(() => {
-      if (keys === 'products' && values.typeFunc == 'update' && user_true && !sessionStorage.getItem(`${keys}-${values}`)) {
+      if (keys === 'products' && values && action === 'update' && user_true && !sessionStorage.getItem(`${keys}-${action}`)) {
         console.log('update products')
 
         const fetchData = async () => {
           try {
-            const response = await update_products(user_true, values.newState);
+            const response = await update_products(user_true, values);
 
             if (response.message == 'Product updated successfully') {
               console.log('product updated')
@@ -302,11 +375,11 @@ export const ContextQueryProvider = ({ children }) => {
       } 
   }, [state.keyQuery, user_true, state.keys, state.values]);
 
+/*
   // delete products
   useEffect(() => {
       if(keys === 'products' && values.action === 'delete' && user_true && !sessionStorage.getItem(`${keys}-${values}`)) {
         console.log('fetching products get products')
-        console.log(state)
 
         const fetchData = async () => {
           try {
@@ -344,13 +417,22 @@ export const ContextQueryProvider = ({ children }) => {
       }
   }, [state.keyQuery, user_true]);
 
+
+  // handle category
+  useEffect(() => {
+    if (state.keyQuery === 'get_category') {
+      console.log('fetching category get category')
+    }
+
+  }, [state]);
+  
   // Handle user logout
   useEffect(() => {
     if (user_true === null) {
       sessionStorage.clear();
       actions.clearData();
     }
-  }, [user_true]);
+  }, [user_true]); */
 
   return (
     <ContextQuery.Provider value={{ ...state, ...actions }}>

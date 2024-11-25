@@ -7,7 +7,7 @@ import { renderImgCompressed } from '../config_user/config_user.component';
 
 import './handle_created.style.scss';
 
-const HandleCreated = ({ valueVarObject, handleStateCreated, openConfirmation, handleClose, handleActionFunc, filterData}) => {
+const HandleCreated = ({ valueVarObject, setIsNewData, handleClose, filterData, currentRoute }) => {
   
     const [ newState, setNewState ] = useState({});
 
@@ -16,15 +16,15 @@ const HandleCreated = ({ valueVarObject, handleStateCreated, openConfirmation, h
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // console.log(newState, 'hola aaaaaaaaaaaaaaaaaaamundo')
         const found = Object.values(newState).some(value => 
             typeof value === "string" && value.includes('required')
         );
 
         if (!found) {      
-            handleStateCreated(newState, 'create');
-            openConfirmation();
-            // console.log(newState, 'asd')
+            setIsNewData({
+                [currentRoute]: newState,
+                action: 'create'
+            })
 
             setTimeout(() => {
                 handleClose();
@@ -42,14 +42,14 @@ const HandleCreated = ({ valueVarObject, handleStateCreated, openConfirmation, h
 
     const handleOnChange = async (e) => {
         const { name, value } = e.target;
-        console.log(name, value, 'hola mundo');
+        // console.log(name, value, 'hola mundo');
     
         if (name === 'image_url') {
             const file = e.target.files[0];
             if (file) {
                 // Comprimir la imagen antes de convertirla a Base64
                 const image = await renderImgCompressed(file, 500, 500, 0.7); // Calidad 0.7 ajustable
-                console.log(image, 'hola mundo');
+                // console.log(image, 'hola mundo');
                 setNewState((prevState) => ({
                     ...prevState,
                     [name]: image // Guardar la imagen comprimida en el estado
@@ -62,9 +62,7 @@ const HandleCreated = ({ valueVarObject, handleStateCreated, openConfirmation, h
                 [name]: value
             }));
         }
-    };
-
-    console.log(newState, 'hola m    mundo');                   
+    };                
 
     useEffect(() => {
         const initialNewState = Object.keys(valueVarObject).reduce((acc, item) => {
@@ -75,7 +73,6 @@ const HandleCreated = ({ valueVarObject, handleStateCreated, openConfirmation, h
         setNewState(initialNewState);
     }, [valueVarObject]);
     
-
     return (
         <form action="" className='handle__submit' onSubmit={handleSubmit}>
             {Object.keys(valueVarObject).map((item, index) => (
@@ -84,8 +81,8 @@ const HandleCreated = ({ valueVarObject, handleStateCreated, openConfirmation, h
                     {valueVarObject[item][3] && (valueVarObject[item][3] === 'select' || valueVarObject[item][3].includes('get')) ? (
                         <Select 
                             item={item} 
-                            value={valueVarObject[item][3]} 
-                            handleActionFunc={handleActionFunc} 
+                            // value={valueVarObject[item][3]} 
+                            // handleActionFunc={handleActionFunc} 
                             options={filterData} 
                             handleSelectValue={handleOnChange} 
                             className={`${error ? 'error' : ''}`}

@@ -16,7 +16,6 @@ const create_user = async (user_form) => {
             body: JSON.stringify(userData),
             mode: 'cors',
         });
-        console.log(response.ok, 'status response ');
 
         if (!response.ok) {
             const errorData = await response.json();
@@ -24,8 +23,11 @@ const create_user = async (user_form) => {
         }
 
         const data = await response.json();
-
-        return data;
+        // return data;
+        return {
+            status: response.status,
+            data: data
+        };
     } catch (error) {
         return ;
     }

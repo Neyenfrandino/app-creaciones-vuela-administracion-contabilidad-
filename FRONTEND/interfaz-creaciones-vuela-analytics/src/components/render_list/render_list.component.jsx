@@ -55,7 +55,7 @@ const reducer = (state, action) => {
 };
 
 
-const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handleActionFunc }) => {
+const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handleActionFunc, setIsNewData, currentRoute }) => {
 
     const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
     const fileInputRef = useRef(null);
@@ -90,7 +90,6 @@ const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handl
 
                 const compressedImage = await renderImgCompressed(file, 500, 500, 0.7);
                 
-                // console.log('Compressed image:', compressedImage);
                 if (compressedImage) {
                     // Actualizar tanto la vista previa como el valor del estado
                     dispatch({ type: actionTypes.SET_PREVIEW_IMAGE, payload: compressedImage });
@@ -108,14 +107,13 @@ const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handl
     const handleSaveUpdate = async () => {
         try {
             dispatch({ type: actionTypes.SET_LOADING, payload: true });
-            // Asegurarse de que tenemos los datos actualizados
-            // console.log("Datos a guardar:", state.updateValue);
+
             if(state.updateValue){
-                // aca enviamos la informacion 
 
-                handleStateCreated(state.updateValue, 'update');
-                openConfirmation();
-
+                setIsNewData({
+                    [currentRoute]: state.updateValue,
+                    action: 'update'
+                  })
                 setTimeout(() => {
                     handleCloseModal();
                 }, 1500);
@@ -139,7 +137,11 @@ const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handl
             dispatch({ type: actionTypes.SET_LOADING, payload: true });
 
             if(state.actionButton.action === 'delete'){
-                handleActionFunc(state.actionButton)
+                // handleActionFunc(state.actionButton)
+                setIsNewData({
+                    [currentRoute]: null,
+                    action: 'delete'
+                  })
             }
             
             setActionButton(null, null);
@@ -153,7 +155,6 @@ const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handl
 
     useEffect(() => {
         if(state.actionButton.action === 'delete'){
-            console.log('hola mundo')
             handleDelete();
         }
     }, [state.actionButton.action])
@@ -165,6 +166,7 @@ const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handl
     };
 
     const { isHovered, showMoreInfo, actionButton, updateValue, previewImage, isLoading } = state;
+
     return (
         <div className="container__render-list">
             <input

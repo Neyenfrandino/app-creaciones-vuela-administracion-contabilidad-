@@ -51,7 +51,7 @@ const App = () => {
   
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
   const stored = sessionStorage.getItem('profile-get');
-  const storedUserTrue = stored ? JSON.parse(stored)?.userData : null;
+  const storedUserTrue = stored ? JSON.parse(stored) : null;
   
   const pathSegments = location.pathname.split('/');
   const currentRoute = data_query.find(item => pathSegments.includes(item.route));
@@ -69,7 +69,10 @@ const App = () => {
     
     // if (initialDataFetched) {
       const routeToFetch = currentRoute?.route || 'profile';
-      setkeyQuery({ [routeToFetch]: 'get' });
+      setkeyQuery({ 
+        [routeToFetch]: null,
+        action: 'get',
+       });
       setInitialDataFetched(true);
     // }
   }, [isAuthPage, initialDataFetched, ]);

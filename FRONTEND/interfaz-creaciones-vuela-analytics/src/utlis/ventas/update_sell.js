@@ -4,7 +4,7 @@ const update_sell = async (userData, newData) => {
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
     try {
-        const response = await fetch(`${apiUrl}/sell_products/update_sell_product/${user_id}`, {
+        const response = await fetch(`${apiUrl}/sell_products/update_sell_product/${user_id}/${newData.sell_product_id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -19,7 +19,11 @@ const update_sell = async (userData, newData) => {
         }
 
         const data = await response.json();
-        return data;
+
+        return {
+            status: response.status,
+            data: data
+        };
     } catch (error) {
         console.error('Error en la solicitud de actualización de ventas:', error);
         return 'error';

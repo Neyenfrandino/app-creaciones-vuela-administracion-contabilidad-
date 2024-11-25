@@ -54,9 +54,7 @@ export const renderImgCompressed = async (file, maxWidth, maxHeight, quality) =>
     return null; // Retorno nulo si no hay archivo
 };
 
-
-
-const ConfigUser = ({ usuario, typeFunc, usuarioA, onStateChange }) => {
+const ConfigUser = ({ usuario, currentAction, usuarioA, setIsNewState }) => {
 
     const location = useLocation();
     
@@ -68,7 +66,7 @@ const ConfigUser = ({ usuario, typeFunc, usuarioA, onStateChange }) => {
         switch (action.type) {
             case USER_ACTION_TYPES.SET_VALUE:
                 const newState = { ...usuario, [action.field]: action.payload }; // Cambiar 'usuario' a 'state'
-                onStateChange(newState, typeFunc); // Enviar el estado actualizado al componente padre
+                setIsNewState(newState, currentAction); // Enviar el estado actualizado al componente padre
                 return newState;
             default:
                 throw new Error(`Action ${action.type} no encontrada`);
@@ -114,6 +112,7 @@ const ConfigUser = ({ usuario, typeFunc, usuarioA, onStateChange }) => {
         }
     };
 
+
     return (
         <div className='profile__content--config--user'>
 
@@ -128,7 +127,7 @@ const ConfigUser = ({ usuario, typeFunc, usuarioA, onStateChange }) => {
                 />
                 
                 {
-                    typeFunc == 'update' ?
+                    currentAction == 'update' ?
                     <label 
                         htmlFor="file-upload" 
                         className={`${location.pathname !== '/profile' ? '' : 'button-image'}`} 
@@ -155,7 +154,7 @@ const ConfigUser = ({ usuario, typeFunc, usuarioA, onStateChange }) => {
 
                     return (
                         <div key={key} className="profile__content--data__item">
-                            {typeFunc === 'update' ? (
+                            {currentAction === 'update' ? (
                                 <form className="profile__content--data__item--form">
                                     <label htmlFor={key}>{key}</label>
                                     <input
