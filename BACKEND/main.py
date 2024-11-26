@@ -31,12 +31,16 @@ app = FastAPI()
 # )
 
 # Permitir CORS para el frontend en Render
+from fastapi.middleware.cors import CORSMiddleware
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://app-creaciones-vuela-administracion.onrender.com"],  # URL del frontend en Render
+    allow_origins=[
+        "https://creaciones-vuela.netlify.app",  # Tu frontend en Netlify
+    ],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],  # Métodos permitidos
-    allow_headers=["*"],  # Permitir todos los headers
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allow_headers=["*"],
 )
 
 
