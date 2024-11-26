@@ -40,7 +40,7 @@ class Settings:
         # Construir la URL de conexión con las credenciales y host correctos
         DATA_BASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}" 
 
-        return DATA_BASE_URL
+    
 # Crear la instancia de Settings
 settings = Settings()
 
