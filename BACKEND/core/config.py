@@ -37,11 +37,11 @@ class Settings:
     # Puerto de la base de datos
 
     # Construir la URL de conexión con las credenciales y host correctos
-    DATA_BASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}" 
+    DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}?sslmode=require"
 
     
 # Crear la instancia de Settings
 settings = Settings()
 
 # Ejemplo de uso
-print(settings.DATA_BASE_URL)
+print(settings.DATABASE_URL)
