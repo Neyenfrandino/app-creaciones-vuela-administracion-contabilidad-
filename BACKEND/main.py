@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import os
 import uvicorn
 from app.routers.user import user
 from app.routers import auth
@@ -49,5 +50,9 @@ app.include_router(cost_analytics.router)
 
 
 
+# if __name__ == "__main__":
+#    uvicorn.run('main:app', port=8000, reload=True)
+
 if __name__ == "__main__":
-   uvicorn.run('main:app', port=8000, reload=True)
+    port = int(os.getenv('POSTGRES_PORT'))  # Obtener el puerto desde la variable de entorno, con 8000 como valor por defecto
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
