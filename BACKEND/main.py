@@ -16,7 +16,7 @@ from app.routers.analytics.sell_analysis import sell_total_analytics
 from app.routers.analytics.cost_analysis import cost_analytics
 
 
-# from app.db.database import Base, engine 
+from app.db.database import Base, engine 
 
 app = FastAPI()
 
@@ -30,10 +30,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# def create_tables():
-#     Base.metadata.create_all(bind=engine)
+def create_tables():
+    Base.metadata.create_all(bind=engine)
 
-# create_tables()
+create_tables()
 
 app.include_router(auth.router)
 app.include_router(user.router)
