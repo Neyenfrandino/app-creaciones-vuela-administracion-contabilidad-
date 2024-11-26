@@ -16,24 +16,34 @@ from app.routers.analytics.sell_analysis import sell_total_analytics
 from app.routers.analytics.cost_analysis import cost_analytics
 
 
-from app.db.database import Base, engine 
+# from app.db.database import Base, engine 
 
 app = FastAPI()
 
 
 # Configurar CORS
+# app.add_middleware(
+#     CORSMiddleware,
+#     # allow_origins=["http://localhost:3000"],
+#     allow_credentials=True,
+#     allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],  # Agrega PATCH a la lista de métodos permitidos,
+#     allow_headers=["*"],
+# )
+
+# Permitir CORS para el frontend en Render
 app.add_middleware(
     CORSMiddleware,
-    # allow_origins=["http://localhost:3000"],
+    allow_origins=["https://app-creaciones-vuela-administracion.onrender.com"],  # URL del frontend en Render
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],  # Agrega PATCH a la lista de métodos permitidos,
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],  # Métodos permitidos
+    allow_headers=["*"],  # Permitir todos los headers
 )
 
-def create_tables():
-    Base.metadata.create_all(bind=engine)
 
-create_tables()
+# def create_tables():
+#     Base.metadata.create_all(bind=engine)
+
+# create_tables()
 
 app.include_router(auth.router)
 app.include_router(user.router)

@@ -5,7 +5,9 @@ const create_user = async (user_form) => {
         email: user_form.email,   // Luego el email
         password: user_form.password // Finalmente la contraseña
     };
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    // const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
+
 
     try {
         const response = await fetch(`${apiUrl}/user/create_user`, {

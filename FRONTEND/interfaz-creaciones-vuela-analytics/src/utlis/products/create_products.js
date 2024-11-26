@@ -1,6 +1,8 @@
 
 const createProducts = async (data_user, product) => {
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    // const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
+
 
     const { user_id, access_token } = data_user;
 

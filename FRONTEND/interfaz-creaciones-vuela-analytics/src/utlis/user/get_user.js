@@ -1,6 +1,8 @@
 const get_user = async (user_data) => {
     const {token, user_id} = user_data;
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    // const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
+
 
     try {
         const response = await fetch(`${apiUrl}/user/read_user/${user_id}`, {

@@ -3,7 +3,9 @@
 const get_category = async (userData) => {
     const { access_token, token_type, user_id } = userData;
 
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    // const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
+
 
     try {
         const response = await fetch(`${apiUrl}/category_of_products/get_all_category_of_products/${user_id}`, {
