@@ -26,18 +26,19 @@ import os
 
 class Settings:
     def __init__(self):
-        self.PROJECT_NAME = "evely-app"
+        self.PROJECT_NAME = "creaciones_vuela_db"
         self.PROJECT_VERSION = "4.0.0"
 
         # Cargar las variables de entorno
-        self.POSTGRES_USER = os.getenv('POSTGRES_USER')  # Creación del usuario
-        self.POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')  # Contraseña
-        self.POSTGRES_DB = os.getenv('POSTGRES_DB')  # Nombre de la base de datos
-        self.POSTGRES_HOST = os.getenv('POSTGRES_HOST')  # Dirección del servidor de base de datos
-        self.POSTGRES_PORT = os.getenv('POSTGRES_PORT')  # Puerto de la base de datos
+        POSTGRES_USER = os.getenv('POSTGRES_USER')
+        POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+        POSTGRES_DB = os.getenv('POSTGRES_DB')
+        POSTGRES_HOST = os.getenv('POSTGRES_HOST')  # Dirección del servidor de base de datos
+        POSTGRES_PORT = os.getenv('POSTGRES_PORT')
+     # Puerto de la base de datos
 
         # Construir la URL de conexión con las credenciales y host correctos
-        self.DATA_BASE_URL = f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+        DATA_BASE_URL = f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
 # Crear la instancia de Settings
 settings = Settings()
