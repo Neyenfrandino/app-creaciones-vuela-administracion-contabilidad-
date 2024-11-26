@@ -25,20 +25,19 @@ load_dotenv(dotenv_path=env_path)
 import os
 
 class Settings:
-    def __init__(self):
-        self.PROJECT_NAME = "creaciones_vuela_db"
-        self.PROJECT_VERSION = "4.0.0"
+    PROJECT_NAME = "creaciones_vuela_db"
+    PROJECT_VERSION = "4.0.0"
 
-        # Cargar las variables de entorno
-        POSTGRES_USER = os.getenv('POSTGRES_USER')
-        POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
-        POSTGRES_DB = os.getenv('POSTGRES_DB')
-        POSTGRES_HOST = os.getenv('POSTGRES_HOST')  # Dirección del servidor de base de datos
-        POSTGRES_PORT = os.getenv('POSTGRES_PORT')
-     # Puerto de la base de datos
+    # Cargar las variables de entorno
+    POSTGRES_USER = os.getenv('POSTGRES_USER')
+    POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+    POSTGRES_DB = os.getenv('POSTGRES_DB')
+    POSTGRES_HOST = os.getenv('POSTGRES_HOST')  # Dirección del servidor de base de datos
+    POSTGRES_PORT = os.getenv('POSTGRES_PORT')
+    # Puerto de la base de datos
 
-        # Construir la URL de conexión con las credenciales y host correctos
-        DATA_BASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}" 
+    # Construir la URL de conexión con las credenciales y host correctos
+    DATA_BASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}" 
 
     
 # Crear la instancia de Settings
