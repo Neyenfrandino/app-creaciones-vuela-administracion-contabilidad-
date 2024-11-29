@@ -32,8 +32,6 @@ const reducer = (state, action) => {
 
 const RenderUser = ({ currentRoute, dataUser_db, actionTypes, setIsNewData}) => {
    
-
-
     const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
 
     const { isCurrentAction, isNewState, isLoading } = state;

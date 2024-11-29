@@ -1,18 +1,18 @@
 
-const update_sell = async (userData, newData) => {
-    const { access_token, token_type, user_id } = userData;
-    // const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-    const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
+const update_sell = async (userData) => {
+    const { access_token, token_type, user_id } = userData.user_true;
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    // const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
 
-
+    console.log(userData)
     try {
-        const response = await fetch(`${apiUrl}/sell_products/update_sell_product/${user_id}/${newData.sell_product_id}`, {
+        const response = await fetch(`${apiUrl}/sell_products/update_sell_product/${user_id}/${userData.values.sell_product_id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${access_token}`
             },
-            body: JSON.stringify(newData)
+            body: JSON.stringify(userData.values)
         });
 
         if (!response.ok) {
@@ -21,11 +21,12 @@ const update_sell = async (userData, newData) => {
         }
 
         const data = await response.json();
-
+        console.log(data)
         return {
             status: response.status,
-            data: data
+            dataTrue: data,
         };
+
     } catch (error) {
         console.error('Error en la solicitud de actualización de ventas:', error);
         return 'error';

@@ -82,7 +82,7 @@ const Table = ({ data, setIsNewData, currentRoute, setOpenModal, filterProductsT
     switch (action) {
       case 'delete':
         setIsNewData({
-          [currentRoute]: null,
+          [currentRoute]: actionButton.actionDataId,
           action: 'delete'
         })
         break;

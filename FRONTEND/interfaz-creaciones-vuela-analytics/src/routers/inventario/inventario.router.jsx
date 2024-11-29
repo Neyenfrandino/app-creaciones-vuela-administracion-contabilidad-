@@ -13,8 +13,6 @@ const InventarioRouter = ({dataInventario}) => {
     
     const isPage = useLocation().pathname == '/inventario';
 
-    console.log(sell_products, 'sell_products')
-
     const setDataMainPage = (dataUrl) => {  
         setkeyQuery({
             [dataUrl]: null,

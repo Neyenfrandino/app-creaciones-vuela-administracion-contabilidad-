@@ -45,7 +45,7 @@ const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user_true, logout } = useContext(ContextLogin);
-  const { setkeyQuery, setDataUser_db } = useContext(ContextQuery);
+  const { setkeyQuery, setDataUser_db, keyQuery, profile } = useContext(ContextQuery);
   
   const [initialDataFetched, setInitialDataFetched] = useState(false);
   
@@ -75,7 +75,7 @@ const App = () => {
        });
       setInitialDataFetched(true);
     // }
-  }, [isAuthPage, initialDataFetched, ]);
+  }, [isAuthPage, ]);
 
   const handleClick = () => {
     setInitialDataFetched(false);
@@ -85,14 +85,13 @@ const App = () => {
   if (isAuthPage) {
     return <AuthRouters />;
   }
-
   return (
     <>
       <div className="nav__container">
         <div className="nav__menu">
           <div className="nav__menu__data-user">
             <CardAdminData 
-              dataAdmin={storedUserTrue} 
+              dataAdmin={keyQuery.profile ? keyQuery.profile || storedUserTrue : profile || storedUserTrue} 
               image={"img/logo.jpg"} 
             />
           </div>

@@ -1,7 +1,8 @@
 const get_ventas = async (userData) => {
-    const { access_token, token_type, user_id } = userData;
-    // const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-    const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
+    const { access_token, token_type, user_id } = userData.user_true;
+    console.log(userData.user_true);
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    // const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
 
     try {
         const response = await fetch(`${apiUrl}/sell_products/get_all_sell_products/${user_id}`, {
@@ -17,10 +18,15 @@ const get_ventas = async (userData) => {
             throw new Error(errorData.message || 'Error en la creación de ventas');
         }
 
-        const data = await response.json();
-        return data;
+        const data = await response.json(); // Obtén los datos
+
+        return {
+            status: response.status,
+            dataTrue: data,
+        };
+        
     } catch (error) {
-        console.error('Error en la solicitud de creación de ventas:', error);
+        console.error('Error en la solicitud get de ventas:', error);
         return 'error';
     }
 }

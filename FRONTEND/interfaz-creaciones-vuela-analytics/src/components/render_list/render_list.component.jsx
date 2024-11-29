@@ -56,7 +56,6 @@ const reducer = (state, action) => {
 
 
 const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handleActionFunc, setIsNewData, currentRoute }) => {
-
     const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
     const fileInputRef = useRef(null);
 

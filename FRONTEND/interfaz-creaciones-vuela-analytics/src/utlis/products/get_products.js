@@ -1,9 +1,10 @@
 
 const get_products = async (userData) => {
-    const { access_token, token_type, user_id } = userData;
-
-    // const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-    const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
+    const {user_true, values} = userData;
+    const { access_token, token_type, user_id } = user_true;
+    console.log(userData.user_true);
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    // const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
 
 
     try {
@@ -18,8 +19,12 @@ const get_products = async (userData) => {
             const errorData = await response.json();
             throw new Error(errorData.message || 'Error en la solicitud de productos');
         }
+
         const data = await response.json();
-        return data;
+        return {
+            status: response.status,
+            dataTrue: data,
+        };
 
     }catch(error){
         return ;

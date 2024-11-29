@@ -1,9 +1,11 @@
 
-const create_sell = async (userData, newData) => {
-    const { access_token, token_type, user_id } = userData;
-    // const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-    const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
+const create_sell = async (userData) => {
+    const {user_true, values} = userData
+    const { access_token, token_type, user_id } = user_true;
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    // const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
 
+    console.log(userData)
 
     try {
         const response = await fetch(`${apiUrl}/sell_products/create_sell_product/${user_id}`, {
@@ -12,7 +14,7 @@ const create_sell = async (userData, newData) => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${access_token}`
             },
-            body: JSON.stringify(newData)
+            body: JSON.stringify(values)
         });
 
         if (!response.ok) {
@@ -20,8 +22,13 @@ const create_sell = async (userData, newData) => {
             throw new Error(errorData.message || 'Error en la creación de ventas');
         }
 
-        const data = await response.json();
-        return data;
+        const data = await response.json(); // Obtén los datos
+
+        return {
+            status: response.status,
+            dataTrue: data,
+        };
+        
     } catch (error) {
         console.error('Error en la solicitud de creación de ventas:', error);
         return 'error';

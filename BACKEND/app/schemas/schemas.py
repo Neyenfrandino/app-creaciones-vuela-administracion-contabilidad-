@@ -49,7 +49,7 @@ class ProductSchema(BaseModel):
 
 
 class SellProductSchema(BaseModel):
-    user_id: int
+    # user_id: int
     products_id: int
     date_sell: date
     quantity_sell: int

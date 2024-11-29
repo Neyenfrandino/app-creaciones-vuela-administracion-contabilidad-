@@ -26,7 +26,7 @@ def update_sell_products(user_id:int, sell_product_id:int, schema_sell_product: 
     response = update_sell_product(user_id, sell_product_id, schema_sell_product, db)
     return response
 
-@router.delete("/delete_sell_product", status_code= status.HTTP_200_OK)
+@router.delete("/delete_sell_product/{user_id}/{sell_product_id}", status_code= status.HTTP_200_OK)
 def delete_sell_products(user_id:int, sell_product_id:int, db: Session = Depends(get_db), current_user: SellProductSchema = Depends(get_current_user)):
     response = delete_sell_product(user_id, sell_product_id, db)
     return response

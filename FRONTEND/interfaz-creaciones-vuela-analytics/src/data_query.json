@@ -28,7 +28,7 @@
     }
   },
   {
-    "route": "sell-products",
+    "route": "sell",
     "section": {
       "title": "Gestión de Ventas de Productos",
       "description": "Esta sección permite gestionar las ventas de productos, incluyendo el registro de ventas, visualización y modificación de registros de ventas.",

@@ -43,8 +43,9 @@ const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
     const currentPath = location.pathname;
     const currentRoute = route || currentPath.split('/')[1];
 
-    const { setkeyQuery, dataUser_db, setDataUser_db, sell_products, products, user } = useContext(ContextQuery);
-    
+    const { setkeyQuery, sell, products, profile, keyQuery } = useContext(ContextQuery);
+
+    // console.log(sell, 'sell')
     const routeData = dataGestionStock.find(item => item.route === currentRoute);
 
     const { section, actions } = routeData || { section: {}, actions: [] };
@@ -65,7 +66,7 @@ const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
         dispatch({ type: actionTypes.SET_LOADING, payload: data });
     }   
 
-
+    // console.log(profile, 'profile')
     // useEffect(() => {
     //     if (dataUrls?.action === 'get') {
     //         setkeyQuery(dataUrls);
@@ -84,10 +85,10 @@ const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
 
 
     useEffect(() => {
-        if(!products && sell_products){
+        if(!products && sell){
             setkeyQuery(isDataCurrentRoute)
         }
-    }, [setIsDataCurrentRoute, isDataCurrentRoute, products, ]);
+    }, [setIsDataCurrentRoute]);
     
     
 
@@ -106,6 +107,7 @@ const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
             console.log(`${action} en proceso...`);
             // Ejecutar lógica común para todas las acciones
             setkeyQuery(isNewData);
+            // console.log(isNewData, 'isNewData');
             
             setIsNewData('');
         } else {
@@ -127,15 +129,15 @@ const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
                 <RenderInventario
                     setIsDataCurrentRoute={setIsDataCurrentRoute}
                     currentRoute={currentRoute}
-                    products={products ? products.products : null}
-                    sell_product={sell_products? sell_products : null}
+                    products={keyQuery.products ? keyQuery.products : products}
+                    sell_product={keyQuery.sell ? keyQuery.sell : sell}
                     setIsNewData={setIsNewData}
                 />
 
 
                 <RenderUser
                     currentRoute={currentRoute}
-                    dataUser_db={dataUser_db}
+                    dataUser_db={keyQuery.profile ? keyQuery.profile : profile}
                     setIsNewData={setIsNewData}
                     actionTypes={actions}
                 />

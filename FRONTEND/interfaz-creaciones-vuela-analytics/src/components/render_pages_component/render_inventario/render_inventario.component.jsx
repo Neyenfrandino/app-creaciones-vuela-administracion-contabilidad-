@@ -14,7 +14,7 @@ import schemas from '../../../schemas.json';
 import './render_inventario.styles.scss';
 
 const RenderInventario = ({ currentRoute, sell_product, products, setIsNewData, setIsDataCurrentRoute  }) => {
-    console.log(products, 'soy product de products')
+    // console.log(products, 'soy product de products')
     const [openModal, setOpenModal] = useState(false);
 
     const [filteredData, setFilteredData] = useState([]);
@@ -79,10 +79,10 @@ const RenderInventario = ({ currentRoute, sell_product, products, setIsNewData, 
     return (
         
         <div>
-            {currentRoute === 'sell-products' && sell_product ? (
+            {currentRoute === 'sell' && sell_product ? (
                 <>
                     <Table 
-                        data={sell_product && sell_product.sell_products}
+                        data={sell_product}
                         setIsNewData={setIsNewData}
                         currentRoute={currentRoute}
                         setOpenModal={setOpenModal}

@@ -55,7 +55,6 @@ export const renderImgCompressed = async (file, maxWidth, maxHeight, quality) =>
 };
 
 const ConfigUser = ({ usuario, currentAction, usuarioA, setIsNewState }) => {
-
     const location = useLocation();
     
     const USER_ACTION_TYPES = {
@@ -63,9 +62,10 @@ const ConfigUser = ({ usuario, currentAction, usuarioA, setIsNewState }) => {
     };
 
     const reducer = (state, action) => {
+        console.log(action, state, 'jaja');
         switch (action.type) {
             case USER_ACTION_TYPES.SET_VALUE:
-                const newState = { ...usuario, [action.field]: action.payload }; // Cambiar 'usuario' a 'state'
+                const newState = { ...usuario, [action.field]: action.payload }; 
                 setIsNewState(newState, currentAction); // Enviar el estado actualizado al componente padre
                 return newState;
             default:
@@ -74,7 +74,7 @@ const ConfigUser = ({ usuario, currentAction, usuarioA, setIsNewState }) => {
     };
 
     const [state, dispatch] = useReducer(reducer, usuario);
-
+    
     const handleInputChange = (e) => {
         e.preventDefault();
         const { name, value } = e.target;
