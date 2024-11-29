@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import Modal from '../modal/modal.component';
 import { renderImgCompressed } from '../config_user/config_user.component';
 import './render_list.style.scss';
@@ -56,6 +56,14 @@ const reducer = (state, action) => {
 
 
 const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handleActionFunc, setIsNewData, currentRoute }) => {
+    const [newList, setNewList] = useState(list);
+
+    useEffect(() => {
+        setNewList(list);
+    }, [list, setIsNewData])
+
+   
+    
     const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
     const fileInputRef = useRef(null);
 
@@ -69,6 +77,7 @@ const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handl
     };
 
     const setActionButton = (action, actionDataId) => {
+        // console.log(action, actionDataId)
         if (!action) {
             dispatch({ type: actionTypes.SET_PREVIEW_IMAGE, payload: null });
         }
@@ -103,11 +112,15 @@ const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handl
         }
     };
 
+
     const handleSaveUpdate = async () => {
         try {
             dispatch({ type: actionTypes.SET_LOADING, payload: true });
 
             if(state.updateValue){
+                delete state.updateValue.user_id;
+                console.log(state.updateValue)
+
 
                 setIsNewData({
                     [currentRoute]: state.updateValue,
@@ -137,8 +150,9 @@ const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handl
 
             if(state.actionButton.action === 'delete'){
                 // handleActionFunc(state.actionButton)
+         
                 setIsNewData({
-                    [currentRoute]: null,
+                    [currentRoute]: state.actionButton.actionDataId.products_id ,
                     action: 'delete'
                   })
             }
@@ -177,7 +191,7 @@ const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handl
             />
             
             <ul className="list__render-list">
-                {list.map((item, index) => (
+                {newList ? newList.map((item, index) => (
                     <li key={index} className="item__render-list" >
                         <div className="item__render-list-image">
                             <img 
@@ -202,16 +216,15 @@ const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handl
                             >
                                 <i className="fa fa-eye" aria-hidden="true" />  
                             </button>
-
                             <button 
-                                onClick={() => {setActionButton('delete', item)}}
+                                onClick={() => { setActionButton('delete', item) }}
                                 disabled={isLoading}
                             >
                                 <i className="fa fa-trash" aria-hidden="true" />
                             </button>
                         </div>
                     </li>
-                ))}
+                )): null}
             </ul>
 
             {showMoreInfo.showMoreInfo && (

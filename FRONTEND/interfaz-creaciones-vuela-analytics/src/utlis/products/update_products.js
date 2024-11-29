@@ -6,32 +6,32 @@ const upodate_products = async (userData) => {
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
     // const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
 
-    
-    // try {
-    //     const response = await fetch(`${apiUrl}/products/update_product/${user_id}/${values.product_id}`, {
-    //         method: 'PATCH',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'Authorization': `Bearer ${access_token}`
-    //         },
-    //         body: JSON.stringify(values)
-    //     });
+    console.log(userData)
+    try {
+        const response = await fetch(`${apiUrl}/products/update_product/${user_id}/${values.products_id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`
+            },
+            body: JSON.stringify(values)
+        });
 
-    //     if (!response.ok) {
-    //         const errorData = await response.json();
-    //         throw new Error(errorData.message || 'Error en la actualización de ventas');
-    //     }
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Error en la actualización de ventas');
+        }
 
-    //     const data = await response.json();
-    //     return {
-    //         status: response.status,
-    //         dataTrue: data,
-    //     };
+        const data = await response.json();
+        return {
+            status: response.status,
+            dataTrue: data,
+        };
 
-    // } catch (error) {
-    //     console.error('Error en la solicitud de actualización de ventas:', error);
-    //     return 'error';
-    // }   
+    } catch (error) {
+        console.error('Error en la solicitud de actualización de ventas:', error);
+        return 'error';
+    }   
 }
 
 export default upodate_products;

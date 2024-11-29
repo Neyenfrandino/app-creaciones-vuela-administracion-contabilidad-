@@ -91,13 +91,14 @@ const reducer = (state, action) => {
   }
 };
 
-const toSessionCache = async (nameVarCache, dataUpdate, values, user_true, handleError, actions) => {
+const toSessionCache = async (nameVarCache, dataUpdate, values, user_true, handleError, actions, statusQuery) => {
   const keyRequest = `${nameVarCache}-${dataUpdate || 'get'}`;
   let cachedData;
 
   // Intenta recuperar datos del caché
   try {
     cachedData = sessionStorage.getItem(keyRequest);
+
     if (cachedData && user_true) {
       actions.setDataUser_db({ [nameVarCache]: JSON.parse(cachedData) });
       return; // No necesitamos hacer fetch si ya está en caché
@@ -108,12 +109,13 @@ const toSessionCache = async (nameVarCache, dataUpdate, values, user_true, handl
 
   // Si no hay datos en caché o hay un error, realiza la solicitud
   if(user_true){
-    await fechtData(nameVarCache, dataUpdate, values, user_true, handleError, actions);
+    await fechtData(nameVarCache, dataUpdate, values, user_true, handleError, actions, statusQuery);
   }
 };
 
-const fechtData = async (nameVarCache, dataUpdate, values, user_true, handleError, actions) => {
-  const keyRequest = `${nameVarCache}-${dataUpdate || 'get'}`;
+const fechtData = async (nameVarCache, dataUpdate, values, user_true, handleError, actions, statusQuery) => {
+  // const keyRequest = `${nameVarCache}-${dataUpdate || 'get'}`;
+  const keyRequest = `${nameVarCache}-${statusQuery.status ? 'get': dataUpdate || 'get'}`;
   const requestFunc = REQUESTS_MAP[keyRequest];
 
   if (!requestFunc) {
@@ -123,13 +125,16 @@ const fechtData = async (nameVarCache, dataUpdate, values, user_true, handleErro
 
   try {
     const response = await requestFunc({ user_true, values });
-
+    
     if ([200, 201, 204].includes(response.status)) {
       const data = response.dataTrue || null;
 
-      if (dataUpdate === 'get') {
+      if (dataUpdate === 'get' || statusQuery.setNewState) {
         sessionStorage.setItem(keyRequest, JSON.stringify(data));
         actions.setDataUser_db({ [nameVarCache]: data });
+        actions.setStatusQuery({ status: false, setNewState: null });
+        return;
+
       } else {
         actions.setStatusQuery({ status: true, setNewState: nameVarCache });
       }
@@ -174,13 +179,21 @@ export const ContextQueryProvider = ({ children }) => {
   useEffect(() => {
     if (keys && action) {
       (async () => {
-        await toSessionCache(keys, action, values, user_true, handleError, actions);
+        await toSessionCache(keys, action, values, user_true, handleError, actions, statusQuery);
       })();
     }
   }, [keys, action, values, user_true, actions]); // Dependencias mínimas necesarias
 
-  // console.log(sessionStorage.getItem('profile-get'));
-  return (
+  useEffect(() => {
+    if (statusQuery.status) {
+      (async () => {
+        await toSessionCache(statusQuery.setNewState, action, values, user_true, handleError, actions, statusQuery);
+      })();
+    }
+  }, [ statusQuery ]); // Solo ejecutar una vez
+
+
+  return (  
     <ContextQuery.Provider value={{ ...state, ...actions }}>
       {children}
     </ContextQuery.Provider>

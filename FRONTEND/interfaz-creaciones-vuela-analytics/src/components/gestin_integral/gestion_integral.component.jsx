@@ -89,8 +89,7 @@ const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
             setkeyQuery(isDataCurrentRoute)
         }
     }, [setIsDataCurrentRoute]);
-    
-    
+        
 
     const handleSaveChanges = (data) => {
         // Validar que data sea "Si" para proceder
@@ -105,10 +104,8 @@ const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
     
         if (['update', 'create', 'delete'].includes(action)) {
             console.log(`${action} en proceso...`);
-            // Ejecutar lógica común para todas las acciones
             setkeyQuery(isNewData);
-            // console.log(isNewData, 'isNewData');
-            
+
             setIsNewData('');
         } else {
             console.warn('Acción desconocida. No se realizará ninguna operación.');
@@ -116,8 +113,7 @@ const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
         }
     };
     
-
-
+  
     return ( 
         <div className="gestion_stock__container">
             <ButtonBack />
@@ -129,7 +125,7 @@ const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
                 <RenderInventario
                     setIsDataCurrentRoute={setIsDataCurrentRoute}
                     currentRoute={currentRoute}
-                    products={keyQuery.products ? keyQuery.products : products}
+                    products={products || keyQuery.products}
                     sell_product={keyQuery.sell ? keyQuery.sell : sell}
                     setIsNewData={setIsNewData}
                 />

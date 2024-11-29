@@ -19,7 +19,7 @@ const get_ventas = async (userData) => {
         }
 
         const data = await response.json(); // Obtén los datos
-
+        console.log(data)
         return {
             status: response.status,
             dataTrue: data,

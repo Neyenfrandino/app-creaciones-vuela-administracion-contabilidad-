@@ -1,15 +1,14 @@
 
-const delete_products = async (userData, product_id) => {
+const delete_products = async (userData) => {
     const {user_true, values} = userData;
     const { user_id, access_token } = user_true;
     
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
     // const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
 
-
     
     try {
-        const response = await fetch(`${apiUrl}/products/delete_product/${user_id}/${product_id}`, {
+        const response = await fetch(`${apiUrl}/products/delete_product/${user_id}/${values}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
