@@ -15,5 +15,11 @@
         "description_product" : ["Descripción", "required", "text"],
         "image_url" : ["Imagen", "required", "file"],
         "price_sell_client_final" : ["Precio de venta", "required", "number"]
-    }  
+    },
+
+    "category_products": {
+        "name_category" : ["Nombre de categoría", "required", "text"],
+        "description" : ["Descripción", "required", "text"],
+        "image_url" : ["Imagen", "required", "file"]
+    }
 }

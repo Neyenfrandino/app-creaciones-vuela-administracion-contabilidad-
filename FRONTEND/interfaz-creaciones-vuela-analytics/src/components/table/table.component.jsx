@@ -79,6 +79,9 @@ const Table = ({ data, setIsNewData, currentRoute, setOpenModal, filterProductsT
   
   useEffect(() => {
     const { action } = actionButton;
+    delete newState.user_id;
+    console.log(newState)
+
     switch (action) {
       case 'delete':
         setIsNewData({

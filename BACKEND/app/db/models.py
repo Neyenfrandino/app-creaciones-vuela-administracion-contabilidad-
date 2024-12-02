@@ -66,6 +66,7 @@ class CategoryOfProduct(Base):
     category_products_id = Column(Integer, primary_key=True)
     name_category = Column(String(255), nullable=False)
     description = Column(String(255))
+    img_url = Column(Text)
 
     # Relación con Product
     products = relationship("Product", back_populates="category")

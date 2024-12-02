@@ -7,11 +7,11 @@ import './button_back.style.scss';
 const ButtonBack = () => {
 
     return (
-        <div onClick={() => window.history.back()} className="button_back__container">
-            <button>
-                <FontAwesomeIcon icon={faArrowLeft} />
-            </button>
-        </div>
+        <div className="button_back__container">
+        <button onClick={() => window.history.back()}>
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </button>
+      </div>
     )
 }
 

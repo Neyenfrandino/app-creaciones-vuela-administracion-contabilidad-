@@ -9,19 +9,29 @@ import Search from "../../search/search.component";
 // Products 
 import RenderList from '../../render_list/render_list.component';
 
+import RenderListNew from '../../render_list_new/render_list_new.component';
+
 import schemas from '../../../schemas.json';
 
 import './render_inventario.styles.scss';
 
-const RenderInventario = ({ currentRoute, sell_product, products, setIsNewData, setIsDataCurrentRoute  }) => {
+const RenderInventario = ({ currentRoute, sell_product, products, setIsNewData, setIsDataCurrentRoute, category }) => {
     // console.log(products, 'soy product de products')
     const [openModal, setOpenModal] = useState(false);
-
     const [filteredData, setFilteredData] = useState([]);
+    const [isSelected, setIsSelected] = useState('category');
 
     useEffect(() => { 
         if(!products) {
-            setIsDataCurrentRoute({'products': null, 'action': 'get'})
+            console.log('hola mundo')
+            setIsDataCurrentRoute({products: null, action: 'get'})
+            return
+        }
+
+        if (!category) {
+            console.log('category',)
+            setIsDataCurrentRoute({ category: null, action: 'get' });
+            return
         }
     }, []);
 
@@ -48,34 +58,49 @@ const RenderInventario = ({ currentRoute, sell_product, products, setIsNewData, 
     ];
 
     const selectCategoryProducts = [
-        [
-            { key: 'category_of_products_id', value: '1', label: 'Electrónica' },
-            { key: 'category_of_products_id', value: '2', label: 'Electrónica' },
-            { key: 'category_of_products_id', value: '3', label: 'Electrónica' },
-            { key: 'category_of_products_id', value: '4', label: 'Electrónica' },
-        ]
-    ]
+        // console.log(category)
+        category && category.length > 0 ? category?.map(item => ({
+            key: 'category_of_products_id',
+            value: item.category_products_id,
+            label: item.name_category
+        })) : [],
+    
+    ] || []
 
     const filterData = [
         filterProductsTag,
         filterDataSell,
         filterPaymentMethod
     ] 
-
-
-    const handleSearch = (e, dataList) => {
-
-        const filteredData = dataList.filter((item) => {
-            return item.name_product.toLowerCase().includes(e.target.value.toLowerCase());
-        });
-
+    
+    const handleSearch = (e, dataList, name) => {
+        const searchTerm = e.target.value.toLowerCase();
+    
+        // Si el campo de búsqueda está vacío, retorna los datos completos
+        if (!searchTerm) {
+            setFilteredData(dataList);
+            return;
+        }
+    
+        // Filtrar los datos por la propiedad indicada (por ejemplo, "name")
+        const filteredData = dataList.filter((item) =>
+            item[name].toLowerCase().includes(searchTerm)
+        );
+    
+        // Actualiza el estado con los datos filtrados
         setFilteredData(filteredData);
     }
+    
 
     const handleOpenModal = useCallback((open) => {
         setOpenModal(open);
     }, [setOpenModal]);
 
+    const handleOnchangeSelect = (e) => {
+        console.log(e.target.value)
+        setIsSelected(e.target.value)
+    }
+    
     return (
         
         <div>
@@ -92,20 +117,39 @@ const RenderInventario = ({ currentRoute, sell_product, products, setIsNewData, 
 
             ) : null}
  
+ 
             {
-                currentRoute === 'products' && products ?
+                currentRoute === 'category' && category ?
                     <>
-                        <div className='products__search'>
-                            <Search handleSearch={(e)=>handleSearch(e, products)} />
-                            <button onClick={handleOpenModal}>Nuevo producto</button>
+                        <div className='products__search'>                      
+                            <select className='products__search-select' name="category_and_product" onChange={(e)=> handleOnchangeSelect(e)} defaultValue="">
+                                <option value="" disabled>Selecciona una opción</option>
+                                <option value="category">Categoría</option>
+                                <option value="product">Producto</option>
+                            </select>
+                            
+                            <Search handleSearch={(e) => handleSearch(e, isSelected === 'category' ? category : products, isSelected === 'category' ? 'name_category' : 'name_product')}/>
+
+                            <button 
+                                onClick={handleOpenModal}>{isSelected === 'category' ? 'Nuevo categoría' : 'Nuevo producto'}
+                            </button>
+
                         </div>
 
-                        <RenderList 
-                            list={filteredData.length > 0 ? filteredData : products}
-                            schemas={schemas.products} 
-                            setIsNewData={setIsNewData}
-                            currentRoute={currentRoute}
-                        />
+                        
+                        {
+                            isSelected === 'category' ? 
+                                <RenderListNew listCategory={filteredData.length > 0 ? filteredData : category} 
+                                    products={products} 
+                                /> : 
+
+                                <RenderList 
+                                    list={filteredData.length > 0 ? filteredData : products}
+                                    schemas={schemas.products} 
+                                    setIsNewData={setIsNewData}
+                                    currentRoute={isSelected === 'category' ? 'category' : 'products'}
+                                />
+                        }
                         
                     </> : null
             }
@@ -113,18 +157,15 @@ const RenderInventario = ({ currentRoute, sell_product, products, setIsNewData, 
 
             <Modal 
                 show={openModal}
-                handleClose={() => {
-                    setOpenModal(false); 
-                    // handleActionFunc('');
-                }} 
-                title={currentRoute === 'products' ? 'New Product' : 'New sell product'} 
+                handleClose={() => {setOpenModal(false)}} 
+                title={currentRoute === 'sell' ? 'new sell product' : isSelected === 'category' ? 'new category' : 'new product'}
             >
                 <HandleCreated 
-                    valueVarObject={currentRoute === 'products' ? schemas.products : schemas.sell_product }  
+                    valueVarObject={currentRoute === 'sell' ? schemas.sell_product : isSelected === 'category' ? schemas.category_products : schemas.products}  
                     setIsNewData={setIsNewData}
                     handleClose={() => setOpenModal(false)}
-                    currentRoute={currentRoute}
-                    filterData={currentRoute === 'products' ? selectCategoryProducts : filterData }
+                    currentRoute={isSelected === 'category' ? 'category' : 'products'}
+                    filterData={currentRoute === 'sell' ? filterData : isSelected === 'category' ? '' : selectCategoryProducts }
                 />
             </Modal> 
         </div>

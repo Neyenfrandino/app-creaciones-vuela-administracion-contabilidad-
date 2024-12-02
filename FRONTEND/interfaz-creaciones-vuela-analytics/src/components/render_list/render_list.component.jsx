@@ -55,7 +55,7 @@ const reducer = (state, action) => {
 };
 
 
-const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handleActionFunc, setIsNewData, currentRoute }) => {
+const RenderList = ({ list, schemas, setIsNewData, currentRoute }) => {
     const [newList, setNewList] = useState(list);
 
     useEffect(() => {
@@ -120,8 +120,6 @@ const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handl
             if(state.updateValue){
                 delete state.updateValue.user_id;
                 console.log(state.updateValue)
-
-
                 setIsNewData({
                     [currentRoute]: state.updateValue,
                     action: 'update'
@@ -149,8 +147,9 @@ const RenderList = ({ list, schemas, openConfirmation, handleStateCreated, handl
             dispatch({ type: actionTypes.SET_LOADING, payload: true });
 
             if(state.actionButton.action === 'delete'){
-                // handleActionFunc(state.actionButton)
-         
+                console.log(state.actionButton)
+                console.log(currentRoute)
+                
                 setIsNewData({
                     [currentRoute]: state.actionButton.actionDataId.products_id ,
                     action: 'delete'

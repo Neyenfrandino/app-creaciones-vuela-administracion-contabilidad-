@@ -1,0 +1,159 @@
+.container__render-new-list {
+    width: 98%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.list__render-new-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas de igual tamaño */
+    // gap: 10px;
+    width: 90%;
+    // border: 2px solid #ccc;
+
+    .item__render-new-list {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: auto;
+        border-radius: 5px;
+        padding: 5px;
+        cursor: pointer;
+        // border: 1px solid #ccc;
+        position: relative;
+        // border: 2px solid #ccc;
+        // background-color: #000000;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 5px;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        &:hover {
+            transition: all 0.3s ease-in-out;
+            // opacity: 0.8;
+
+            img {
+                opacity: 0.6; /* Opaque the image */
+            }
+
+            .item_render_new_list-button-view-products {
+                background-color: #00000022;
+                backdrop-filter: blur(5px);
+                // border: 1px solid #007bff;
+                h3,
+                p, button {
+                    color: #ffffff; /* Make text brighter */
+                    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+                }
+            }
+        }
+
+        .item_render_new_list-button-edit-category {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            border-radius: 5px;
+            cursor: pointer;
+
+            button {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: all 0.3s ease-in-out;
+                position: absolute;
+                top: 15px;
+                right: 15px;
+
+                &:hover {
+                    background-color: #0069d9;
+                    color: white;
+                }
+            }
+        }
+
+        .item_render_new_list-button-view-products {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: start;
+            height: auto;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 20px;
+            left: 30px;
+            min-width: 300px;
+            width: auto;
+            max-width: 400px;
+            // border: 2px solid #007bff;
+            padding: 10px;
+            transition: all 0.3s ease-in-out;
+
+            h3 {
+                font-size: 18px;
+                margin-bottom: 0px;
+                color: #333;
+                transition: color 0.3s ease-in-out;
+            }
+
+            p {
+                font-size: 14px;
+                color: #666;
+                margin-bottom: 5px;
+                transition: color 0.3s ease-in-out;
+            }
+
+            .item_render_new_list-button-view-products-link {
+                background-color: transparent;
+                color: rgb(226, 226, 226);
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: all 0.3s ease-in-out;
+                border: 1px solid #007bff;
+                text-decoration: none;
+
+
+
+                &:hover {
+                    background-color: #0069d977;
+                    color: white;
+                }
+            }
+
+            &:hover {
+                // border: 2px solid #007bff;
+                // background-color: #00000022;
+                // backdrop-filter: blur(5px);
+                transition: all 0.3s ease-in-out;
+            }
+        }
+    }
+}
+
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

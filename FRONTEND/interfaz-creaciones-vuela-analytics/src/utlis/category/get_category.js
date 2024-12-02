@@ -1,8 +1,8 @@
 
 
 const get_category = async (userData) => {
-    const { access_token, token_type, user_id } = userData;
-
+    const { access_token, token_type, user_id } = userData.user_true;
+    
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
     // const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
 
@@ -22,8 +22,10 @@ const get_category = async (userData) => {
         }
 
         const data = await response.json();
-        console.log(data, 'hola mundo')
-        return data;
+        return {
+            status: response.status,
+            dataTrue: data,
+        };
 
     }catch(error){
         return ;

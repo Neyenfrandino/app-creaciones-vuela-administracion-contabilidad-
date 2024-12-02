@@ -10,7 +10,7 @@ from alembic import context
 from core.config import settings
 
 config = context.config
-config.set_main_option('sqlalchemy.url', settings. DATA_BASE_URL)
+config.set_main_option('sqlalchemy.url', settings. DATABASE_URL)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

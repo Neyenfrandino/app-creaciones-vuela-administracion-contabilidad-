@@ -50,7 +50,7 @@ class ProductSchema(BaseModel):
 
 class SellProductSchema(BaseModel):
     # user_id: int
-    products_id: int
+    products_id: Optional[int] = None
     date_sell: date
     quantity_sell: int
     price_unit: float
@@ -65,6 +65,7 @@ class SellProductSchema(BaseModel):
 class CategoryOfProductSchema(BaseModel):
     name_category: str
     description: Optional[str] = None
+    img_url: Optional[str] = None
 
     class Config:
         orm_mode = True

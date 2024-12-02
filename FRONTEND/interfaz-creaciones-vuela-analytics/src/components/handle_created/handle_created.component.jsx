@@ -19,7 +19,7 @@ const HandleCreated = ({ valueVarObject, setIsNewData, handleClose, filterData, 
         const found = Object.values(newState).some(value => 
             typeof value === "string" && value.includes('required')
         );
-
+        console.log(found, 'hola mundo')
         if (!found) {      
             setIsNewData({
                 [currentRoute]: newState,
@@ -63,6 +63,8 @@ const HandleCreated = ({ valueVarObject, setIsNewData, handleClose, filterData, 
             }));
         }
     };                
+
+    console.log(newState, 'hola mundo')
 
     useEffect(() => {
         const initialNewState = Object.keys(valueVarObject).reduce((acc, item) => {

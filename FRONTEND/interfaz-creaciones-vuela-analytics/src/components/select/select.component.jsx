@@ -2,10 +2,9 @@ import { useEffect } from "react";
 
 import './select.style.scss';
 const Select = ({ options, handleSelectValue, item, className }) => {
-
     if(!options) return null;
     
-   
+//    console.log(options, 'options')
     return (
         <div className='select__container'>
             <select 

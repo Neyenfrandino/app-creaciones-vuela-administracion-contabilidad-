@@ -13,20 +13,7 @@
       "delete": "Eliminar usuario"
     }
   },
-  {
-    "route": "products",
-    "section": {
-      "title": "Gestión de Productos",
-      "description": "Esta sección permite gestionar los productos del sistema, incluyendo la creación, modificación, visualización y eliminación de productos.",
-      "icon": "faBoxes"
-    },
-    "actions": {
-      "create": "Crear producto",
-      "update": "Modificar producto",
-      "get": "Ver productos disponibles",
-      "delete": "Eliminar producto"
-    }
-  },
+
   {
     "route": "sell",
     "section": {
@@ -44,7 +31,7 @@
   {
     "route": "category",
     "section": {
-      "title": "Gestión de Categorías de Productos",
+      "title": "Gestión de Categorías y Productos",
       "description": "Esta sección permite gestionar las categorías de productos, facilitando la creación, visualización, modificación y eliminación de categorías.",
       "icon": "faTags"
     },

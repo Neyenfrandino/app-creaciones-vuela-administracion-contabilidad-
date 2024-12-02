@@ -7,6 +7,7 @@ import ButtonBack from '../button_back/button_back.component.jsx';
 import RenderInventario from '../render_pages_component/render_inventario/render_inventario.component.jsx';
 import RenderUser from '../render_pages_component/render_user/render_user.component.jsx';
 
+import Loading from '../loading/loading.component.jsx';
 import './gestion_integral.style.scss';
 
 const INITIAL_STATE = {
@@ -19,7 +20,6 @@ const actionTypes = {
     SET_DATA_CURRENT_ROUTE: 'SET_DATA_CURRENT_ROUTE',
     SET_DATA_SECUNDARY_ROUTE: 'SET_DATA_SECUNDARY_ROUTE',
     SET_NEW_DATA: 'SET_NEW_DATA',
-    SET_LOADING: 'SET_LOADING'
 }
 
 const reducer = (state, action) => {
@@ -28,8 +28,6 @@ const reducer = (state, action) => {
             return { ...state, isDataCurrentRoute: action.payload };
         case actionTypes.SET_NEW_DATA:
             return { ...state, isNewData: action.payload };
-        case actionTypes.SET_LOADING:
-            return { ...state, isLoading: action.payload };
         default:
             return state;
     }
@@ -43,8 +41,7 @@ const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
     const currentPath = location.pathname;
     const currentRoute = route || currentPath.split('/')[1];
 
-    const { setkeyQuery, sell, products, profile, keyQuery } = useContext(ContextQuery);
-
+    const { setkeyQuery, sell, products, profile, keyQuery, category, isLoading } = useContext(ContextQuery);
     // console.log(sell, 'sell')
     const routeData = dataGestionStock.find(item => item.route === currentRoute);
 
@@ -52,7 +49,7 @@ const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
 
     const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
 
-    const { isDataCurrentRoute, isNewData, isLoading } = state;
+    const { isDataCurrentRoute, isNewData } = state;
 
     const setIsDataCurrentRoute = (data) => {
         dispatch({ type: actionTypes.SET_DATA_CURRENT_ROUTE, payload: data });
@@ -60,37 +57,30 @@ const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
 
     const setIsNewData = (data) => {
         dispatch({ type: actionTypes.SET_NEW_DATA, payload: data });
-    }
-
-    const setIsLoading = (data) => {
-        dispatch({ type: actionTypes.SET_LOADING, payload: data });
     }   
-
-    // console.log(profile, 'profile')
-    // useEffect(() => {
-    //     if (dataUrls?.action === 'get') {
-    //         setkeyQuery(dataUrls);
-    //     }
-
-    //     if(currentRoute === 'sell-products' && dataUrls?.action === 'get' && sell_products){
-    //         console.log('sell-products')
-    //         setkeyQuery({'products': null, 'action': 'get'})
-    //     }
-
-    //     if(isNewData.action == 'update' || isDataCurrentRoute.action === 'update' || isNewData.action === 'delete' || isDataCurrentRoute.action === 'create'){
-    //         setkeyQuery({[currentRoute]: null, 'action': 'get'})
-    //     }
-
-    // }, [dataUrls, currentRoute, sell_products, isNewData, ]);
-
 
     useEffect(() => {
         if(!products && sell){
+            console.log('hola mundo')
             setkeyQuery(isDataCurrentRoute)
+            return
         }
-    }, [setIsDataCurrentRoute]);
-        
 
+        if(products && !category){
+            console.log('hola')
+            setkeyQuery({'category': null, 'action': 'get'})
+            return
+        }
+
+        if(category && !products){
+            console.log('mundo')
+            setkeyQuery(isDataCurrentRoute)
+            return
+        }
+
+    }, [setIsDataCurrentRoute, dataUrls]);
+
+    
     const handleSaveChanges = (data) => {
         // Validar que data sea "Si" para proceder
         if (data !== 'Si') {
@@ -98,6 +88,7 @@ const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
             setIsNewData('');
             return;
         }
+
     
         // Obtener la acción desde isNewData o isDataCurrentRoute
         const action = isNewData?.action || isDataCurrentRoute?.action;
@@ -118,15 +109,18 @@ const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
         <div className="gestion_stock__container">
             <ButtonBack />
             <div className="gestion_stock__content">
+            {isLoading ? <Loading isLoading={isLoading} /> : null}
+
                 <header className='gestion_stock__header'>
                     <h1>{section.title}</h1>
                 </header>
-
+                
                 <RenderInventario
                     setIsDataCurrentRoute={setIsDataCurrentRoute}
                     currentRoute={currentRoute}
                     products={products || keyQuery.products}
                     sell_product={keyQuery.sell ? keyQuery.sell : sell}
+                    category={keyQuery.category ? keyQuery.category : category}
                     setIsNewData={setIsNewData}
                 />
 

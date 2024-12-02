@@ -27,20 +27,29 @@ import {
   products_delete
 } from '../../utlis/products';
 
+import { 
+  category_get
+} from '../../utlis/category';
+
 // Mapeo de solicitudes para centralizar la gestión
 const REQUESTS_MAP = {
+  //profile
   'profile-get': profile_get,
   'profile-create': profile_create,
   'profile-update': profile_update,
   'profile-delete': profile_delete,
+  //sell
   'sell-get': sell_get,
   'sell-create': sell_create,
   'sell-update': sell_update,
   'sell-delete': sell_delete,
+  //products
   'products-get': products_get,
   'products-create': products_create,
   'products-update': products_update,
-  'products-delete': products_delete
+  'products-delete': products_delete,
+  //category
+  'category-get': category_get
 };
 
 const INITIAL_STATE = {
@@ -55,7 +64,8 @@ const actionTypes = {
   SET_KEY_QUERY: 'SET_KEY_QUERY',
   SET_USER_DATA: 'SET_USER_DATA',
   CLEAR_DATA: 'CLEAR_DATA',
-  SET_STATUS_QUERY: 'SET_STATUS_QUERY'
+  SET_STATUS_QUERY: 'SET_STATUS_QUERY',
+  SET_IS_LOADING: 'SET_IS_LOADING'
 };
 
 const reducer = (state, action) => {
@@ -75,7 +85,7 @@ const reducer = (state, action) => {
 
     case actionTypes.SET_USER_DATA: {
       const key = Object.keys(action.payload)[0];
-      return ['products', 'sell', 'profile'].includes(key)
+      return ['products', 'sell', 'profile', 'category'].includes(key)
         ? { ...state, [key]: action.payload[key] }
         : { ...state, dataUser_db: action.payload };
     }
@@ -86,20 +96,25 @@ const reducer = (state, action) => {
     case actionTypes.SET_STATUS_QUERY:
       return { ...state, statusQuery: action.payload };
 
+    case actionTypes.SET_IS_LOADING:
+      return { ...state, isLoading: action.payload };
+
     default:
       return state;
   }
 };
 
 const toSessionCache = async (nameVarCache, dataUpdate, values, user_true, handleError, actions, statusQuery) => {
+
   const keyRequest = `${nameVarCache}-${dataUpdate || 'get'}`;
   let cachedData;
-
+  console.log(keyRequest, 'hola mundo')
   // Intenta recuperar datos del caché
   try {
     cachedData = sessionStorage.getItem(keyRequest);
-
+    
     if (cachedData && user_true) {
+
       actions.setDataUser_db({ [nameVarCache]: JSON.parse(cachedData) });
       return; // No necesitamos hacer fetch si ya está en caché
     }
@@ -109,6 +124,7 @@ const toSessionCache = async (nameVarCache, dataUpdate, values, user_true, handl
 
   // Si no hay datos en caché o hay un error, realiza la solicitud
   if(user_true){
+    
     await fechtData(nameVarCache, dataUpdate, values, user_true, handleError, actions, statusQuery);
   }
 };
@@ -117,25 +133,36 @@ const fechtData = async (nameVarCache, dataUpdate, values, user_true, handleErro
   // const keyRequest = `${nameVarCache}-${dataUpdate || 'get'}`;
   const keyRequest = `${nameVarCache}-${statusQuery.status ? 'get': dataUpdate || 'get'}`;
   const requestFunc = REQUESTS_MAP[keyRequest];
-
+  
   if (!requestFunc) {
     actions.setStatusQuery({ status: false, message: `Request function for ${keyRequest} not found` });
     return;
   }
 
   try {
+    actions.setIsLoading(true);
     const response = await requestFunc({ user_true, values });
     
     if ([200, 201, 204].includes(response.status)) {
       const data = response.dataTrue || null;
 
       if (dataUpdate === 'get' || statusQuery.setNewState) {
+
         sessionStorage.setItem(keyRequest, JSON.stringify(data));
         actions.setDataUser_db({ [nameVarCache]: data });
         actions.setStatusQuery({ status: false, setNewState: null });
+        setTimeout(() => {
+          actions.setIsLoading(false);
+          // actions.setStatusQuery({ status: true, setNewState: nameVarCache });
+        },1000); 
         return;
 
       } else {
+        setTimeout(() => {
+          actions.setIsLoading(false);
+          // actions.setStatusQuery({ status: true, setNewState: nameVarCache });
+        },1000);  
+        // actions.setIsLoading(false);
         actions.setStatusQuery({ status: true, setNewState: nameVarCache });
       }
     } else {
@@ -150,11 +177,10 @@ const fechtData = async (nameVarCache, dataUpdate, values, user_true, handleErro
 export const ContextQuery = createContext(INITIAL_STATE);
 
 export const ContextQueryProvider = ({ children }) => {
-  const navigate = useNavigate();
-  const { user_true, setUserTrue } = useContext(ContextLogin);
+  const { user_true } = useContext(ContextLogin);
 
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
-  const { keys, values, action, dataUser_db, statusQuery } = state;
+  const { keys, values, action, statusQuery, isLoading, } = state;
 
   const handleError = useCallback((error, message) => {
     console.error(message, error);
@@ -173,7 +199,10 @@ export const ContextQueryProvider = ({ children }) => {
     },
     setStatusQuery: (status) => {
       dispatch({ type: actionTypes.SET_STATUS_QUERY, payload: status });
-    }
+    },
+    setIsLoading: (isLoading) => {
+      dispatch({ type: actionTypes.SET_IS_LOADING, payload: isLoading });
+    },
   }), []);
 
   useEffect(() => {

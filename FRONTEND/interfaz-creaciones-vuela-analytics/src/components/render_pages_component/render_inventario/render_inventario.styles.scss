@@ -1,10 +1,10 @@
 .products__search {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: 1rem;
 }
-.products__search button {
+.products__search button, .products__search-select {
     padding: 0.8rem 1.5rem;
     background-color: #4caf50; /* Verde atractivo */
     color: #fff;
