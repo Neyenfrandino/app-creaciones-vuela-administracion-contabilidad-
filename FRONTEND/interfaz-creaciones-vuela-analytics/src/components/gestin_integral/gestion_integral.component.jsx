@@ -61,26 +61,28 @@ const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
 
     useEffect(() => {
         if(!products && sell){
-            console.log('hola mundo')
             setkeyQuery(isDataCurrentRoute)
             return
         }
 
         if(products && !category){
-            console.log('hola')
-            setkeyQuery({'category': null, 'action': 'get'})
+            setkeyQuery({category: null, action: 'get'})
             return
         }
 
         if(category && !products){
-            console.log('mundo')
             setkeyQuery(isDataCurrentRoute)
             return
         }
 
-    }, [setIsDataCurrentRoute, dataUrls]);
+        if (!profile && currentRoute === 'profile') {
+            setkeyQuery({profile: null, action: 'get'})
+            return
+        }
 
-    
+    }, [setIsDataCurrentRoute]);
+
+
     const handleSaveChanges = (data) => {
         // Validar que data sea "Si" para proceder
         if (data !== 'Si') {
@@ -107,7 +109,6 @@ const GestionIntegral = ({ dataGestionStock, dataUrls }) => {
   
     return ( 
         <div className="gestion_stock__container">
-            <ButtonBack />
             <div className="gestion_stock__content">
             {isLoading ? <Loading isLoading={isLoading} /> : null}
 

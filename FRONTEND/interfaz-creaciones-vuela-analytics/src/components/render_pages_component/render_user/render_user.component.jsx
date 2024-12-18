@@ -68,7 +68,7 @@ const RenderUser = ({ currentRoute, dataUser_db, actionTypes, setIsNewData}) => 
         }
     }, [isNewState, isCurrentAction])
 
-
+    console.log(dataUser_db)
     return (
         <div>
             {

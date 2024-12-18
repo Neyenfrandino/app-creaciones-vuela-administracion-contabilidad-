@@ -23,13 +23,11 @@ const RenderInventario = ({ currentRoute, sell_product, products, setIsNewData, 
 
     useEffect(() => { 
         if(!products) {
-            console.log('hola mundo')
             setIsDataCurrentRoute({products: null, action: 'get'})
             return
         }
 
         if (!category) {
-            console.log('category',)
             setIsDataCurrentRoute({ category: null, action: 'get' });
             return
         }
@@ -97,7 +95,6 @@ const RenderInventario = ({ currentRoute, sell_product, products, setIsNewData, 
     }, [setOpenModal]);
 
     const handleOnchangeSelect = (e) => {
-        console.log(e.target.value)
         setIsSelected(e.target.value)
     }
     
@@ -139,8 +136,9 @@ const RenderInventario = ({ currentRoute, sell_product, products, setIsNewData, 
                         
                         {
                             isSelected === 'category' ? 
-                                <RenderListNew listCategory={filteredData.length > 0 ? filteredData : category} 
-                                    products={products} 
+                                <RenderListNew 
+                                    listCategory={filteredData.length > 0 ? filteredData : category} 
+                                    schemas={schemas.category_products} 
                                 /> : 
 
                                 <RenderList 

@@ -5,7 +5,6 @@ const Modal = ({ show, handleClose, children, title }) => {
 
     if(!show) return null;  
 
-    
     return (
         <div className="modal-container">
             <div className="modal">
