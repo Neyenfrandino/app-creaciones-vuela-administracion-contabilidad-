@@ -1,8 +1,8 @@
 
 const update_sell = async (userData) => {
     const { access_token, token_type, user_id } = userData.user_true;
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-    // const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
+    // const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
 
     console.log(userData)
     try {

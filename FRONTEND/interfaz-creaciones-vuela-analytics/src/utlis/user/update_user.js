@@ -1,6 +1,6 @@
 const updateUser = async (data_update) => {
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-// const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
+    // const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
 
     const {user_id, access_token} = data_update.user_true;
 

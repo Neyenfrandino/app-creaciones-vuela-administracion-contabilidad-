@@ -4,8 +4,8 @@ const createProducts = async (data_user) => {
     const {user_true, values} = data_user;
     const { user_id, access_token } = user_true;
 
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-    // const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
+    // const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
 
     try {
         const response = await fetch(`${apiUrl}/products/create_product/${user_id}`, {

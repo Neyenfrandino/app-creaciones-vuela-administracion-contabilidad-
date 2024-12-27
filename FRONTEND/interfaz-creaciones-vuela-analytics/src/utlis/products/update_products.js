@@ -3,8 +3,8 @@ const upodate_products = async (userData) => {
     const { user_true, values } = userData;
     const { access_token, token_type, user_id } = user_true;
     
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-    // const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
+    // const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+    const apiUrl = process.env.REACT_APP_API_URL || 'https://app-creaciones-vuela-administracion.onrender.com';
 
     console.log(userData)
     try {
