@@ -52,7 +52,7 @@ class Settings:
 
     # Construir la URL de conexión con las credenciales y host correctos
     # DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}?sslmode=require"
-    DATABASE_URL = "postgresql://creaciones_vuela_db:uxDbbMyHSnA6Qp5MgwvCsm371CEGqIg3@dpg-ct2s6cjv2p9s73b222sg-a.oregon-postgres.render.com:5432/creaciones_vuela_db?sslmode=require"
+    DATABASE_URL = "postgresql://creaciones_vuela_db:dpg-ctnabr3qf0us73aes1p0-a:5432/creaciones_vuela_db?sslmode=require"
 
 # Crear la instancia de Settings
 settings = Settings()
