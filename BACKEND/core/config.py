@@ -51,8 +51,10 @@ class Settings:
     POSTGRES_PORT = os.getenv('POSTGRES_PORT')  # Puerto de la base de datos
 
     # Construir la URL de conexión con las credenciales y host correctos
-    DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}?sslmode=require"
+    # DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}?sslmode=require"
     # DATABASE_URL = "postgresql://creaciones_vuela_db:dpg-ctnabr3qf0us73aes1p0-a:5432/creaciones_vuela_db?sslmode=require"
+    DATABASE_URL = "postgresql://postgres:Neyen1995@dpg-ctnabr3qf0us73aes1p0-a:5432/app-creaciones-vuela?sslmode=require"
+
 
 # Crear la instancia de Settings
 settings = Settings()
